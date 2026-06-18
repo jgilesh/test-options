@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Test Your Knowledge — demystified</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+<style>
+* { box-sizing:border-box; margin:0; padding:0; }
+body { background:#F5F0E8; font-family:system-ui,-apple-system,sans-serif; color:#1a1108; min-height:100vh; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+.fu { animation:fadeUp 0.35s ease both; }
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-thumb{background:#C4A460;border-radius:3px}
+
+.flip-scene { perspective: 1400px; }
+.flip-card {
+  position: relative;
+  width: 100%;
+  min-height: 560px;
+  transition: transform 0.5s;
+  transform-style: preserve-3d;
+}
+.flip-card.flipped { transform: rotateY(180deg); }
+.flip-face {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+.flip-front { background:#fffcf7; border:1px solid #e8ddd0; }
+.flip-back { transform: rotateY(180deg); }
+
+.opt-btn {
+  width: 100%;
+  text-align: left;
+  background: #fffcf7;
+  border: 1.5px solid #e8ddd0;
+  border-radius: 10px;
+  padding: 0.7rem 0.9rem;
+  font-size: 0.85rem;
+  color: #1a1108;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: system-ui, sans-serif;
+}
+.opt-btn:hover { border-color:#F5853F; background:#fef8f0; }
+.opt-btn:active { transform: scale(0.99); }
+
+.cat-card {
+  background:#fffcf7; border-radius:14px; padding:1.4rem; border:1px solid #e8ddd0;
+  position:relative; overflow:hidden; cursor:pointer; transition:transform 0.15s, box-shadow 0.15s;
+  text-align:left; width:100%; font-family:inherit;
+}
+.cat-card:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(26,17,8,0.08); }
+.cat-card-all {
+  background:linear-gradient(130deg,#1a1108,#2c1d0e); border:none; color:#fff;
+}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useMemo } = React;
+
+/* ============== BRAND TOKENS ============== */
+const OR = "#F5853F", RD = "#D94F2A", GR = "#0D9E6E", GD = "#C4A460", PU = "#7C5CBF";
+const DK = "#1a1108", CA = "#fffcf7", BD = "#e8ddd0", LBL = "#8a7560", MUT = "#b0a090";
+
+/* ============== TERM DATA ============== */
+const CATEGORIES = [
+  { id: "chart", label: "Chart Basics", color: OR, icon: "📈" },
+  { id: "mechanics", label: "Options Mechanics", color: PU, icon: "📜" },
+  { id: "greeks", label: "The Greeks", color: GD, icon: "Δ" },
+  { id: "chain", label: "The Options Chain", color: "#2A7ED4", icon: "🔗" },
+  { id: "strategy", label: "Strategy & Setup", color: GR, icon: "🎯" },
+  { id: "investing", label: "Investing Foundations", color: RD, icon: "🏛️" },
+];
+
+const TERMS = [
+  // ---------- CHART BASICS ----------
+  { cat:"chart", term:"Candle", short:"A single bar showing the open, high, low, and close price for one time period.", reveal:"A single candle shows the open, high, low, and close price for one time period on a chart. The thick part (the body) shows the range between open and close, while the thin lines above and below (wicks) show the highest and lowest prices reached during that period.", svg:"candle" },
+  { cat:"chart", term:"Wick", short:"The thin line above or below a price bar showing the highest and lowest price reached.", reveal:"The wick is the thin line above or below a candle's body that shows the highest and lowest price reached during that period. A long wick means price moved sharply in that direction before pulling back, which can hint at rejection at that level.", svg:"wick" },
+  { cat:"chart", term:"Support", short:"A price level where a stock has historically stopped falling and bounced back up.", reveal:"Support is a price level where a stock has historically stopped falling and bounced back up. Traders watch these levels closely because price often reacts there again, either bouncing higher or breaking through to fall further.", svg:"support" },
+  { cat:"chart", term:"Resistance", short:"A price level where a stock has historically stopped rising and turned back down.", reveal:"Resistance is a price level where a stock has historically stopped rising and turned back down. It works like a ceiling, and a break above it can signal the start of a stronger move higher.", svg:"resistance" },
+  { cat:"chart", term:"Trend Line", short:"A line connecting a series of highs or lows to show price's general direction.", reveal:"A trend line connects a series of highs or lows on a chart to show the general direction price is moving. An upward-sloping trend line connects rising lows, while a downward-sloping one connects falling highs.", svg:"trendline" },
+  { cat:"chart", term:"Moving Average", short:"A smoothed line plotting the average price over a set number of periods.", reveal:"A moving average smooths out price by plotting the average price over a set number of periods, like 20 or 50 days. It helps traders see the underlying trend without the noise of daily price swings.", svg:"ma" },
+  { cat:"chart", term:"Volume", short:"The number of shares or contracts traded during a given period.", reveal:"Volume is the number of shares or contracts traded during a given period. Higher volume on a price move suggests stronger conviction behind that move, while low volume suggests the move may not hold." },
+  { cat:"chart", term:"Indicator", short:"A calculation based on price and volume that helps interpret what a chart shows.", reveal:"An indicator is a calculation based on price and volume that helps traders interpret what a chart is showing. RSI and MACD are both examples of indicators traders layer on top of a price chart." },
+  { cat:"chart", term:"RSI (Relative Strength Index)", short:"Measures how fast and far price has moved recently, on a 0 to 100 scale.", reveal:"RSI is an indicator that measures how fast and how far price has moved recently, on a scale from 0 to 100. Readings above 70 suggest a stock may be overbought, while readings below 30 suggest it may be oversold." },
+  { cat:"chart", term:"MACD", short:"Compares two moving averages to show momentum and potential trend changes.", reveal:"MACD is an indicator that compares two moving averages to show momentum and potential trend changes. When the faster line crosses above the slower one, it can signal upward momentum building." },
+  { cat:"chart", term:"Chart Pattern", short:"A recognizable shape formed by price movement that traders use to anticipate moves.", reveal:"A chart pattern is a recognizable shape formed by price movement over time, like a triangle or a head and shoulders. Traders use these patterns to anticipate what price might do next based on how it has behaved before." },
+  { cat:"chart", term:"Timeframe", short:"The length of time each candle or bar on a chart represents.", reveal:"Timeframe refers to the length of time each candle or bar on a chart represents, such as 1 minute, 1 hour, or 1 day. Shorter timeframes show more detail and noise, while longer timeframes show the bigger picture." },
+  { cat:"chart", term:"Breakout", short:"When price moves decisively above resistance or below support.", reveal:"A breakout happens when price moves decisively above resistance or below support. Traders watch for breakouts because they can signal the start of a stronger directional move.", svg:"breakout" },
+  { cat:"chart", term:"Pullback", short:"A short-term move against the trend before price continues in its original direction.", reveal:"A pullback is a short-term move against the overall trend before price continues moving in its original direction. It's different from a reversal, which is a true change in the trend's direction, not just a pause.", svg:"pullback" },
+  { cat:"chart", term:"Uptrend", short:"A sustained pattern of price making higher highs and higher lows over time.", reveal:"An uptrend is a sustained pattern of price making higher highs and higher lows over time. It reflects more buying pressure than selling pressure in the market.", svg:"uptrend" },
+  { cat:"chart", term:"Downtrend", short:"A sustained pattern of price making lower highs and lower lows over time.", reveal:"A downtrend is a sustained pattern of price making lower highs and lower lows over time. It reflects more selling pressure than buying pressure in the market.", svg:"downtrend" },
+  { cat:"chart", term:"Consolidation", short:"A period where price moves sideways in a tight range instead of trending.", reveal:"Consolidation is a period where price moves sideways in a tight range instead of trending up or down. It often happens after a strong move, as the market pauses before its next direction.", svg:"consolidation" },
+  { cat:"chart", term:"Candlestick Body", short:"The thick part of a candle showing the range between open and close.", reveal:"The body of a candle is the thick part that shows the range between the opening and closing price for that period. A filled or red body usually means price closed lower than it opened, while an open or green body means it closed higher.", svg:"body" },
+  { cat:"chart", term:"Gap", short:"A space on the chart where price jumps from one level to another with no trading between.", reveal:"A gap is a space on the chart where price jumps from one level to another with no trading in between, usually between one day's close and the next day's open. Gaps often happen after news or earnings and can act like new support or resistance levels.", svg:"gap" },
+
+  // ---------- OPTIONS MECHANICS ----------
+  { cat:"mechanics", term:"Contract", short:"Gives the buyer the right to buy or sell 100 shares at a set price before a set date.", reveal:"A contract gives the buyer the right to buy or sell 100 shares of a stock at a set price before a set date. Members trade the contract itself for profit rather than using it to actually buy or sell the shares." },
+  { cat:"mechanics", term:"Strike Price", short:"The set price written into a contract at which shares could be bought or sold.", reveal:"The strike price is the set price written into the contract at which shares could be bought or sold. It's the anchor point that determines whether a contract is in, at, or out of the money." },
+  { cat:"mechanics", term:"Premium", short:"The price paid to buy a contract, multiplied by 100 for the total cost.", reveal:"Premium is the price paid to buy a contract, quoted per share and then multiplied by 100 for the total cost. A $1.30 premium means $130 to control one contract." },
+  { cat:"mechanics", term:"Expiration Date", short:"The day a contract stops existing and becomes worthless if not closed first.", reveal:"The expiration date is the day a contract stops existing and becomes worthless if not closed first. Every contract has one, and time decay accelerates as it approaches." },
+  { cat:"mechanics", term:"In The Money (ITM)", short:"When the stock price has moved past the strike in the contract's favor.", reveal:"A contract is in the money when the stock price has moved past the strike in the contract's favor. For a call, that means the stock is above the strike, for a put, below it." },
+  { cat:"mechanics", term:"At The Money (ATM)", short:"When the stock price is equal to, or very close to, the strike price.", reveal:"A contract is at the money when the stock price is equal to, or very close to, the strike price. ATM contracts tend to have the highest sensitivity to small price moves." },
+  { cat:"mechanics", term:"Out of The Money (OTM)", short:"When the stock price has not reached the strike in the contract's favor.", reveal:"A contract is out of the money when the stock price has not reached the strike in the contract's favor. OTM contracts are cheaper but carry a higher chance of expiring worthless." },
+  { cat:"mechanics", term:"Trading the Contract", short:"Buying and later selling a contract itself to capture profit, without ever owning the shares.", reveal:"Trading the contract means buying and later selling the contract itself to capture a profit, without ever owning or delivering the underlying shares. This is the primary way members in this program approach options." },
+  { cat:"mechanics", term:"Exercising", short:"Actually using a contract to buy or sell the 100 shares at the strike price.", reveal:"Exercising means actually using the contract to buy or sell the 100 shares at the strike price. Most traders close their contract for a profit instead of exercising it." },
+  { cat:"mechanics", term:"Underlying (Underlying Asset)", short:"The actual stock or asset that a contract is based on.", reveal:"The underlying is the actual stock or asset that a contract is based on. The contract's value moves in relation to how the underlying's price moves." },
+  { cat:"mechanics", term:"Lot Size (Contract Multiplier)", short:"The fact that one standard options contract represents 100 shares.", reveal:"Lot size refers to the fact that one standard options contract represents 100 shares of the underlying. This is why premium is always multiplied by 100 to get the real dollar cost." },
+  { cat:"mechanics", term:"Intrinsic Value", short:"The portion of a contract's premium that comes from being in the money.", reveal:"Intrinsic value is the portion of a contract's premium that comes from being in the money. It's the real, immediate value the contract would have right now." },
+  { cat:"mechanics", term:"Extrinsic Value", short:"The portion of premium based on time remaining and expected volatility, not profitability.", reveal:"Extrinsic value is the portion of a contract's premium based on time remaining and expected volatility, not current profitability. This value shrinks steadily as expiration approaches." },
+  { cat:"mechanics", term:"Assignment", short:"When the seller of a contract is required to deliver or buy the 100 shares.", reveal:"Assignment happens when the seller of a contract is required to deliver or buy the 100 shares because the buyer exercised. It's a risk sellers of contracts need to plan for." },
+  { cat:"mechanics", term:"Expires Worthless", short:"When a contract finishes out of the money at expiration with no value left.", reveal:"A contract expires worthless when it finishes out of the money at expiration, meaning it has no value left. The buyer loses the full premium paid, and no shares change hands." },
+  { cat:"mechanics", term:"Buyer vs Seller", short:"One side pays for the right with limited risk, the other collects upfront but takes on an obligation.", reveal:"The buyer pays premium for the right the contract represents and has limited risk capped at that premium. The seller collects premium upfront but takes on the obligation tied to that contract." },
+  { cat:"mechanics", term:"Call", short:"Gives the buyer the right to benefit when the stock price rises above the strike.", reveal:"A call gives the buyer the right to benefit when the underlying stock price rises above the strike. Calls are the contract type used when a member expects the price to go up." },
+  { cat:"mechanics", term:"Put", short:"Gives the buyer the right to benefit when the stock price falls below the strike.", reveal:"A put gives the buyer the right to benefit when the underlying stock price falls below the strike. Puts are the contract type used when a member expects the price to go down." },
+  { cat:"mechanics", term:"Strike Price Intervals", short:"The fixed gaps between available strike prices on a chain.", reveal:"Strike price intervals are the fixed gaps between available strike prices on a chain, like $1, $5, or $10 apart. Wider intervals are common on higher-priced stocks, narrower ones on lower-priced stocks." },
+
+  // ---------- THE GREEKS ----------
+  { cat:"greeks", term:"Delta", short:"Measures how much a contract's price moves for every $1 move in the stock.", reveal:"Delta measures how much a contract's price is expected to move for every $1 move in the underlying stock. A Delta of 0.50 means the contract gains roughly $0.50 for every $1 the stock moves in its favor, which is why it's often read as a rough probability of finishing in the money." },
+  { cat:"greeks", term:"Theta", short:"Measures how much value a contract loses each day purely from time passing.", reveal:"Theta measures how much value a contract loses each day purely from time passing. It's often called time decay, and it accelerates the closer a contract gets to expiration." },
+  { cat:"greeks", term:"Gamma", short:"Measures how much Delta itself changes as the stock price moves.", reveal:"Gamma measures how much Delta itself changes as the stock price moves. Higher Gamma means Delta can shift quickly, which adds risk and opportunity near the money." },
+  { cat:"greeks", term:"Vega", short:"Measures how sensitive a contract's price is to changes in implied volatility.", reveal:"Vega measures how sensitive a contract's price is to changes in implied volatility. Higher Vega means the contract's price can swing more when the market's expectation of future movement changes." },
+  { cat:"greeks", term:"Implied Volatility (IV)", short:"The market's expectation of how much a stock will move going forward.", reveal:"Implied volatility is the market's expectation of how much a stock will move going forward, expressed as a percentage. Higher IV makes contracts more expensive because bigger expected moves add value." },
+  { cat:"greeks", term:"IV Rank", short:"Shows where current implied volatility sits relative to its range over the past year.", reveal:"IV Rank shows where current implied volatility sits relative to its highest and lowest levels over the past year, on a 0 to 100 scale. A high IV Rank means volatility is elevated compared to its recent history." },
+  { cat:"greeks", term:"IV Percentile", short:"Shows the percent of days over the past year with lower implied volatility than today.", reveal:"IV Percentile shows the percentage of days over the past year that had lower implied volatility than today. It's similar to IV Rank but calculated differently, using how many days were lower rather than the full range." },
+  { cat:"greeks", term:"Theta Decay", short:"The ongoing loss of a contract's extrinsic value as each day passes.", reveal:"Theta decay is the ongoing loss of a contract's extrinsic value as each day passes. It speeds up significantly in the final 30 days before expiration." },
+  { cat:"greeks", term:"Delta Neutral", short:"A position structured so its overall Delta is close to zero.", reveal:"Delta neutral describes a position structured so its overall Delta is close to zero, meaning it isn't strongly biased toward the stock moving up or down. It's a more advanced concept used in certain hedging and spread strategies." },
+  { cat:"greeks", term:"Time Decay", short:"How an option's extrinsic value erodes simply because less time remains.", reveal:"Time decay is the general term for how an option's extrinsic value erodes simply because less time remains until expiration. It works against contract buyers and in favor of contract sellers." },
+  { cat:"greeks", term:"Volatility Crush", short:"When implied volatility drops sharply, often right after earnings or major news.", reveal:"A volatility crush happens when implied volatility drops sharply, often right after an earnings report or major news event. Contract prices can fall fast during a volatility crush even if the stock price barely moves." },
+
+  // ---------- THE OPTIONS CHAIN ----------
+  { cat:"chain", term:"Bid", short:"The highest price a buyer is currently willing to pay for a contract.", reveal:"The bid is the highest price a buyer is currently willing to pay for a contract. If you're selling a contract, the bid is the price you'd receive." },
+  { cat:"chain", term:"Ask", short:"The lowest price a seller is currently willing to accept for a contract.", reveal:"The ask is the lowest price a seller is currently willing to accept for a contract. If you're buying a contract, the ask is the price you'd pay." },
+  { cat:"chain", term:"Spread (Bid-Ask Spread)", short:"The gap between the bid and the ask price.", reveal:"The spread is the gap between the bid and the ask price. A tighter spread usually means a more liquid, easier-to-trade contract." },
+  { cat:"chain", term:"Open Interest", short:"The total number of contracts at a strike and expiration that are currently open.", reveal:"Open interest is the total number of contracts at a given strike and expiration that are currently open and have not been closed. Higher open interest generally signals more liquidity and trader interest." },
+  { cat:"chain", term:"Volume (on the chain)", short:"The number of contracts traded at a specific strike during the current day.", reveal:"Volume on the chain is the number of contracts traded at a specific strike during the current trading day. It resets each day, unlike open interest which carries forward." },
+  { cat:"chain", term:"Last Price", short:"The price at which a contract most recently traded.", reveal:"The last price is the price at which a contract most recently traded. It can sit between the bid and ask if no new trades have happened recently." },
+  { cat:"chain", term:"Change (price change)", short:"How much a contract's price has moved compared to the previous close.", reveal:"Change shows how much a contract's price has moved compared to the previous day's close. It's usually displayed alongside the last price on the chain." },
+  { cat:"chain", term:"Expiration Cycle", short:"The set of available expiration dates offered for a given stock.", reveal:"The expiration cycle refers to the set of available expiration dates offered for a given stock, such as weekly, monthly, or quarterly. Different stocks offer different cycles based on demand and liquidity." },
+  { cat:"chain", term:"Strike Column", short:"The central column on the chain listing every available strike price.", reveal:"The strike column is the central column on the chain listing every available strike price for that stock. Calls are typically displayed on one side and puts on the other." },
+  { cat:"chain", term:"Chain Layout", short:"Calls on one side, strikes in the middle, puts on the other side.", reveal:"The standard chain layout places call contracts on the left, the strike prices in the middle, and put contracts on the right. This makes it easy to compare both contract types at the same strike." },
+  { cat:"chain", term:"Mark Price", short:"Typically the midpoint between the bid and ask.", reveal:"The mark price is typically the midpoint between the bid and ask, used as a more stable reference than the last traded price. Many brokers use mark price for displaying account value." },
+  { cat:"chain", term:"Liquidity (on the chain)", short:"How easily a contract can be bought or sold without moving its price much.", reveal:"Liquidity on the chain refers to how easily a contract can be bought or sold without significantly moving its price. Tight spreads and high open interest are both signs of strong liquidity." },
+  { cat:"chain", term:"Near-Term vs Far-Term Expiration", short:"Dates coming up soon versus dates much further out.", reveal:"Near-term expirations are dates coming up soon, often within days or weeks, while far-term expirations are further out, sometimes months or years away. Near-term contracts typically have faster time decay." },
+  { cat:"chain", term:"Weekly vs Monthly Options", short:"Contracts expiring every week versus on a set monthly schedule.", reveal:"Weekly options expire every week, while monthly options expire on a set monthly schedule, often the third Friday of the month. Monthlies tend to have more liquidity and open interest than most weeklies." },
+
+  // ---------- STRATEGY & SETUP ----------
+  { cat:"strategy", term:"Pre-Trade Checklist", short:"A framework of conditions a contract should meet before entering a trade.", reveal:"The Pre-Trade Checklist is Dominique's framework of conditions a contract should meet before entering a trade. It covers Delta range, expiration timing, Theta ratio, open interest, and position size." },
+  { cat:"strategy", term:"Delta Range (0.40–0.60 rule)", short:"The ideal Delta range for entry, set between 0.40 and 0.60.", reveal:"Dominique's rule sets the ideal Delta range for entry between 0.40 and 0.60. This range balances meaningful price sensitivity with a reasonable probability of success." },
+  { cat:"strategy", term:"Theta Ratio Rule", short:"Theta should be no more than 50% of Delta when entering a trade.", reveal:"This rule states that Theta should be no more than 50% of Delta when entering a trade. Keeping Theta in check helps prevent time decay from eating profits faster than the stock can move in your favor." },
+  { cat:"strategy", term:"Open Interest Minimum", short:"A minimum of 500 open interest before entering a contract.", reveal:"Dominique's checklist sets a minimum of 500 open interest before entering a contract. This helps ensure there's enough liquidity to get in and out of the trade without excessive slippage." },
+  { cat:"strategy", term:"Premium-to-Portfolio Rule", short:"Caps premium spent on a single trade to 2 to 5% of total portfolio value.", reveal:"This rule caps the premium spent on any single trade to 2 to 5% of total portfolio value. It's a position-sizing guardrail that limits how much damage one bad trade can do." },
+  { cat:"strategy", term:"Scalp Trading", short:"Entering and exiting positions within minutes to capture small, fast price moves.", reveal:"Scalp trading involves entering and exiting positions within minutes to capture small, fast price moves. It requires close attention to the chart and quick decision-making." },
+  { cat:"strategy", term:"Day Trading", short:"Opening and closing a position within the same trading day.", reveal:"Day trading means opening and closing a position within the same trading day. Trades are held longer than a scalp but never overnight." },
+  { cat:"strategy", term:"Swing Trading", short:"Holding a position for several days to a few weeks to capture a larger move.", reveal:"Swing trading holds a position for several days to a few weeks to capture a larger price move. It requires less constant monitoring than scalping or day trading." },
+  { cat:"strategy", term:"LEAP", short:"An option contract with an expiration date a year or more out.", reveal:"A LEAP is an option contract with an expiration date a year or more out. LEAPs are used for longer-term directional bets with more time for the thesis to play out." },
+  { cat:"strategy", term:"Stop-Loss", short:"A predetermined price or loss level at which a trader exits a losing position.", reveal:"A stop-loss is a predetermined price or loss level at which a trader exits a losing position to limit further damage. It's set before entering the trade, not decided in the moment." },
+  { cat:"strategy", term:"Position Sizing", short:"Deciding how much capital to put into a single trade based on risk tolerance.", reveal:"Position sizing is the process of deciding how much capital to put into a single trade based on account size and risk tolerance. Proper position sizing keeps any one trade from causing outsized damage to the portfolio." },
+  { cat:"strategy", term:"Risk-Reward Ratio", short:"Compares how much you stand to lose against how much you stand to gain.", reveal:"Risk-reward ratio compares how much you stand to lose against how much you stand to gain on a trade. A 1:3 ratio, for example, means risking $1 to potentially make $3." },
+  { cat:"strategy", term:"Entry Point", short:"The price or condition at which a trader decides to open a position.", reveal:"The entry point is the price or condition at which a trader decides to open a position. A clear entry point is defined ahead of time as part of the trade plan, not chosen impulsively." },
+  { cat:"strategy", term:"Exit Point", short:"The price or condition at which a trader plans to close a position.", reveal:"The exit point is the price or condition at which a trader plans to close a position, whether for a profit or to limit a loss. Like the entry, it's ideally decided before the trade is placed." },
+  { cat:"strategy", term:"Trade Plan", short:"Lays out the entry, exit, position size, and reasoning for a trade before it's placed.", reveal:"A trade plan lays out the entry, exit, position size, and reasoning for a trade before it's placed. Having one in place removes emotion from the decision once the trade is live." },
+  { cat:"strategy", term:"Profit Target", short:"The price or gain level at which a trader plans to take profits and close.", reveal:"A profit target is the price or gain level at which a trader plans to take profits and close the position. Setting one ahead of time helps avoid holding too long out of greed." },
+  { cat:"strategy", term:"Risk Tolerance", short:"How much loss a trader is personally willing and able to accept.", reveal:"Risk tolerance is how much loss a trader is personally willing and able to accept on a given trade or in their overall portfolio. It shapes decisions like position size and which strategies are appropriate." },
+  { cat:"strategy", term:"Account Risk (per-trade %)", short:"The percentage of total account value a trader risks on a single position.", reveal:"Account risk per trade is the percentage of total account value a trader is willing to risk on any single position. Keeping this percentage small protects the account from a string of losing trades." },
+  { cat:"strategy", term:"Trading Style", short:"The general approach a trader takes, such as Scalp, Day Trade, Swing, or LEAP.", reveal:"Trading style refers to the general approach a trader takes, such as Scalp, Day Trade, Swing, or LEAP. Each style differs in holding time, risk profile, and how closely the trade needs to be monitored." },
+
+  // ---------- INVESTING FOUNDATIONS ----------
+  { cat:"investing", term:"Diversification", short:"Spreading investments across different assets so no single one can sink the portfolio.", reveal:"Diversification means spreading investments across different assets so no single one can sink the whole portfolio. It's a way of managing risk rather than trying to eliminate it entirely." },
+  { cat:"investing", term:"Dividend", short:"A portion of a company's profit paid out to shareholders, usually quarterly.", reveal:"A dividend is a portion of a company's profit paid out to shareholders, usually on a quarterly basis. Not all companies pay dividends, and the ones that do can change or stop payments at any time." },
+  { cat:"investing", term:"ETF", short:"A basket of stocks or other assets that trades on an exchange like a single stock.", reveal:"An ETF, or exchange-traded fund, is a basket of stocks or other assets that trades on an exchange like a single stock. It offers built-in diversification without having to buy each underlying holding individually." },
+  { cat:"investing", term:"Stock (Equity)", short:"Represents a small ownership stake in a company.", reveal:"A stock represents a small ownership stake in a company. Owning shares means you participate in that company's gains and losses as its value changes." },
+  { cat:"investing", term:"Market Cap", short:"The total value of a company's outstanding shares.", reveal:"Market cap is the total value of a company's outstanding shares, calculated by multiplying share price by the number of shares. It's commonly used to classify companies as small, mid, or large cap." },
+  { cat:"investing", term:"Bull Market", short:"A sustained period of rising prices across the broader market.", reveal:"A bull market describes a sustained period of rising prices, generally across the broader market. It's typically associated with optimism and strong investor confidence." },
+  { cat:"investing", term:"Bear Market", short:"A sustained period of falling prices, generally a 20%+ decline from recent highs.", reveal:"A bear market describes a sustained period of falling prices, generally a 20% or greater decline from recent highs. It's typically associated with pessimism and reduced investor confidence." },
+  { cat:"investing", term:"Volatility (general market)", short:"How much and how quickly prices move up and down over time.", reveal:"Volatility describes how much and how quickly prices move up and down over a given period. Higher volatility means bigger swings in either direction, not necessarily a bad sign on its own." },
+  { cat:"investing", term:"Liquidity (general)", short:"How easily an asset can be bought or sold without affecting its price much.", reveal:"Liquidity refers to how easily an asset can be bought or sold without significantly affecting its price. Cash is the most liquid asset, while things like real estate are far less liquid." },
+  { cat:"investing", term:"Broker", short:"The platform or firm that executes trades on an investor's behalf.", reveal:"A broker is the platform or firm that executes trades on an investor's behalf. Most modern brokers are apps or websites like Schwab, Webull, or Fidelity." },
+  { cat:"investing", term:"Portfolio", short:"The full collection of investments an individual or institution holds.", reveal:"A portfolio is the full collection of investments an individual or institution holds. It can include stocks, ETFs, bonds, cash, and other assets together." },
+  { cat:"investing", term:"Asset Allocation", short:"How a portfolio is divided across different types of investments.", reveal:"Asset allocation is how a portfolio is divided across different types of investments, like stocks, bonds, and cash. The right mix depends on goals, timeline, and risk tolerance." },
+  { cat:"investing", term:"Index (e.g. S&P 500)", short:"Tracks the performance of a specific group of stocks as a benchmark.", reveal:"An index tracks the performance of a specific group of stocks, like the 500 largest U.S. companies in the S&P 500. It's used as a benchmark to measure how the broader market or a sector is performing." },
+  { cat:"investing", term:"Compounding", short:"When investment gains generate their own future gains over time.", reveal:"Compounding is the process where investment gains generate their own future gains over time. The longer money stays invested, the more powerful the compounding effect becomes." },
+  { cat:"investing", term:"Risk vs Return", short:"Higher potential returns usually come with higher potential risk.", reveal:"Risk versus return describes the general principle that higher potential returns usually come with higher potential risk. Understanding this tradeoff helps investors choose investments that match their comfort level and goals." },
+];
+
+/* ============== SVG GRAPHICS (hand-rolled, for flagged chart terms) ============== */
+function SvgCandle(){
+  return (
+    <svg viewBox="0 0 200 120" style={{width:"100%",maxWidth:180,height:"auto"}}>
+      <line x1="55" y1="10" x2="55" y2="35" stroke={GR} strokeWidth="2"/>
+      <rect x="42" y="35" width="26" height="45" fill={GR} rx="2"/>
+      <line x1="55" y1="80" x2="55" y2="105" stroke={GR} strokeWidth="2"/>
+      <line x1="140" y1="15" x2="140" y2="40" stroke={RD} strokeWidth="2"/>
+      <rect x="127" y="40" width="26" height="40" fill={RD} rx="2"/>
+      <line x1="140" y1="80" x2="140" y2="110" stroke={RD} strokeWidth="2"/>
+      <text x="55" y="118" textAnchor="middle" fontSize="9" fill={LBL} fontFamily="Georgia,serif">bullish</text>
+      <text x="140" y="118" textAnchor="middle" fontSize="9" fill={LBL} fontFamily="Georgia,serif">bearish</text>
+    </svg>
+  );
+}
+function SvgWick(){
+  return (
+    <svg viewBox="0 0 200 120" style={{width:"100%",maxWidth:180,height:"auto"}}>
+      <line x1="100" y1="8" x2="100" y2="35" stroke={GD} strokeWidth="2.5"/>
+      <rect x="82" y="35" width="36" height="45" fill={GR} rx="2"/>
+      <line x1="100" y1="80" x2="100" y2="112" stroke={GD} strokeWidth="2.5"/>
+      <text x="100" y="22" textAnchor="middle" fontSize="9" fill={GD} fontFamily="Georgia,serif">upper wick</text>
+      <text x="100" y="100" textAnchor="middle" fontSize="9" fill={GD} fontFamily="Georgia,serif" dy="14">lower wick</text>
+    </svg>
+  );
+}
+function SvgSupport(){
+  return (
+    <svg viewBox="0 0 200 120" style={{width:"100%",maxWidth:180,height:"auto"}}>
+      <line x1="15" y1="85" x2="185" y2="85" stroke={GR} strokeWidth="1.5" strokeDasharray="4,3"/>
+      <polyline points="15,35 55,70 75,84 95,70 130,40 160,72 185,55" fill="none" stroke={DK} strokeWidth="2.5" strokeLinejoin="round"/>
+      <circle cx="75" cy="84" r="4" fill={GR}/>
+      <circle cx="160" cy="72" r="4" fill={GR}/>
+      <text x="185" y="80" textAnchor="end" fontSize="9" fill={GR} fontFamily="Georgia,serif">support</text>
+    </svg>
+  );
+}
+function SvgResistance(){
+  return (
+    <svg viewBox="0 0 200 120" style={{width:"100%",maxWidth:180,height:"auto"}}>
+      <line x1="15" y1="30" x2="185" y2="30" stroke={RD} strokeWidth="1.5" strokeDasharray="4,3"/>
+      <polyline points="15,80 55,45 75,32 95,46 130,75 160,33 185,50" fill="none" stroke={DK} strokeWidth="2.5" strokeLinejoin="round"/>
+      <circle cx="75" cy="32" r="4" fill={RD}/>
+      <circle cx="160" cy="33" r="4" fill={RD}/>
+      <text x="185" y="24" textAnchor="end" fontSize="9" fill={RD} fontFamily="Georgia,serif">resistance</text>
+    </svg>
+  );
+}
+function SvgTrendline(){
+  return (
+    <svg viewBox="0 0 200 120" style={{width:"100%",maxWidth:180,height:"auto"}}>
+      <polyline points="15,95 60,78 100,60 140,42 185,20" fill="none" stroke={OR} strokeWidth="2" strokeDasharray="5,3"/>
+      <circle cx="60" cy="78" r="3.5" fill={DK}/>
+      <circle cx="100" cy="60" r="3.5" fill={DK}/>
+      <circle cx="140" cy="42" r="3.5" fill={DK}/>
+      <text x="100" y="110" textAnchor="middle" fontSize="9" fill={OR} fontFamily="Georgia,serif">connects rising lows</text>
+    </svg>
+  );
+}
+function SvgMA(){
+  return (
+    <svg viewBox="0 0 200 120" style={{width:"100%",maxWidth:180,height:"auto"}}>
+      <polyline points="15,70 35,50 55,75 75,40 95,65 115,35 135,60 155,30 175,55" fill="none" stroke="#ddd0bc" strokeWidth="1.5"/>
+      <path d="M15,62 Q60,68 100,52 T185,40" fill="none" stroke={PU} strokeWidth="2.5"/>
+      <text x="185" y="36" textAnchor="end" fontSize="9" fill={PU} fontFamily="Georgia,serif">moving avg</text>
+    </svg>
+  );
+}
+function SvgBody(){
+  return (
+    <svg viewBox="0 0 200 120" style={{width:"100%",maxWidth:180,height:"auto"}}>
+      <line x1="100" y1="15" x2="100" y2="30" stroke={GR} strokeWidth="2"/>
+      <rect x="78" y="30" width="44" height="55" fill={GR} rx="2" stroke={DK} strokeWidth="1"/>
+      <line x1="100" y1="85" x2="100" y2="100" stroke={GR} strokeWidth="2"/>
+      <text x="100" y="62" textAnchor="middle" fontSize="9" fill="#fff" fontFamily="Georgia,serif">body</text>
+    </svg>
+  );
+}
+function SvgGap(){
+  return (
+    <svg viewBox="0 0 200 120" style={{width:"100%",maxWidth:180,height:"auto"}}>
+      <line x1="40" y1="58" x2="40" y2="76" stroke={GR} strokeWidth="2"/>
+      <rect x="28" y="76" width="24" height="22" fill={GR} rx="2"/>
+      <line x1="40" y1="98" x2="40" y2="106" stroke={GR} strokeWidth="2"/>
+      <line x1="160" y1="18" x2="160" y2="33" stroke={GR} strokeWidth="2"/>
+      <rect x="148" y="33" width="24" height="28" fill={GR} rx="2"/>
+      <line x1="160" y1="61" x2="160" y2="73" stroke={GR} strokeWidth="2"/>
+      <rect x="52" y="61" width="96" height="15" fill={RD} opacity="0.12" rx="2"/>
+      <line x1="52" y1="61" x2="148" y2="61" stroke={RD} strokeWidth="1.5" strokeDasharray="3,3"/>
+      <line x1="52" y1="76" x2="148" y2="76" stroke={RD} strokeWidth="1.5" strokeDasharray="3,3"/>
+      <text x="100" y="71" textAnchor="middle" fontSize="9" fill={RD} fontFamily="Georgia,serif" fontWeight="700">gap</text>
+    </svg>
+  );
+}
+function SvgConsolidation(){
+  return (
+    <svg viewBox="0 0 200 120" style={{width:"100%",maxWidth:180,height:"auto"}}>
+      <line x1="15" y1="35" x2="185" y2="35" stroke={GD} strokeWidth="1.3" strokeDasharray="3,3"/>
+      <line x1="15" y1="62" x2="185" y2="62" stroke={GD} strokeWidth="1.3" strokeDasharray="3,3"/>
+      <polyline points="15,40 50,55 85,42 120,58 155,44 185,52" fill="none" stroke={DK} strokeWidth="2.5" strokeLinejoin="round"/>
+      <text x="100" y="100" textAnchor="middle" fontSize="9" fill={GD} fontFamily="Georgia,serif">sideways range</text>
+    </svg>
+  );
+}
+function SvgPullback(){
+  return (
+    <svg viewBox="0 0 200 120" style={{width:"100%",maxWidth:180,height:"auto"}}>
+      <polyline points="15,95 55,65 80,80 110,50 185,15" fill="none" stroke={DK} strokeWidth="2.5" strokeLinejoin="round"/>
+      <circle cx="80" cy="80" r="4" fill={OR}/>
+      <text x="80" y="100" textAnchor="middle" fontSize="9" fill={OR} fontFamily="Georgia,serif">pullback</text>
+    </svg>
+  );
+}
+function SvgBreakout(){
+  return (
+    <svg viewBox="0 0 200 120" style={{width:"100%",maxWidth:180,height:"auto"}}>
+      <line x1="15" y1="45" x2="130" y2="45" stroke={RD} strokeWidth="1.5" strokeDasharray="4,3"/>
+      <polyline points="15,75 50,55 85,48 120,46 150,30 185,12" fill="none" stroke={GR} strokeWidth="2.5" strokeLinejoin="round"/>
+      <circle cx="130" cy="45" r="4" fill={GR}/>
+      <text x="130" y="35" textAnchor="middle" fontSize="9" fill={RD} fontFamily="Georgia,serif">breakout</text>
+    </svg>
+  );
+}
+function SvgUptrend(){
+  return (
+    <svg viewBox="0 0 200 120" style={{width:"100%",maxWidth:180,height:"auto"}}>
+      <polyline points="15,95 50,75 75,80 105,55 130,60 160,35 185,40" fill="none" stroke={GR} strokeWidth="2.5" strokeLinejoin="round"/>
+      <circle cx="75" cy="80" r="3.5" fill={GR}/>
+      <circle cx="130" cy="60" r="3.5" fill={GR}/>
+      <text x="100" y="110" textAnchor="middle" fontSize="9" fill={GR} fontFamily="Georgia,serif">higher highs &amp; lows</text>
+    </svg>
+  );
+}
+function SvgDowntrend(){
+  return (
+    <svg viewBox="0 0 200 120" style={{width:"100%",maxWidth:180,height:"auto"}}>
+      <polyline points="15,15 50,35 75,30 105,55 130,50 160,75 185,70" fill="none" stroke={RD} strokeWidth="2.5" strokeLinejoin="round"/>
+      <circle cx="75" cy="30" r="3.5" fill={RD}/>
+      <circle cx="130" cy="50" r="3.5" fill={RD}/>
+      <text x="100" y="110" textAnchor="middle" fontSize="9" fill={RD} fontFamily="Georgia,serif">lower highs &amp; lows</text>
+    </svg>
+  );
+}
+const SVG_MAP = { candle:SvgCandle, wick:SvgWick, support:SvgSupport, resistance:SvgResistance, trendline:SvgTrendline, ma:SvgMA, body:SvgBody, gap:SvgGap, consolidation:SvgConsolidation, pullback:SvgPullback, breakout:SvgBreakout, uptrend:SvgUptrend, downtrend:SvgDowntrend };
+
+/* ============== HELPERS ============== */
+function shuffle(arr){
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--){
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+  }
+  return a;
+}
+
+function buildOptions(card, pool){
+  var others = pool.filter(function(c){ return c.term !== card.term; });
+  var distractors = shuffle(others).slice(0, 4).map(function(c){ return c.short; });
+  var options = shuffle([card.short].concat(distractors));
+  return options;
+}
+
+/* ============== UI COMPONENTS ============== */
+function Topbar(){
+  return (
+    <div style={{background:DK,padding:"11px 20px",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+      <span style={{fontFamily:"Georgia,serif",fontStyle:"italic",fontSize:"1.2rem",color:"#fff"}}>demystified</span>
+      <a href="https://options101-hub.vercel.app/"
+        style={{display:"flex",alignItems:"center",gap:"6px",background:"rgba(255,255,255,0.08)",border:"1px solid rgba(255,255,255,0.14)",borderRadius:"999px",padding:"5px 14px",textDecoration:"none"}}>
+        <span style={{color:"#d4a87a",fontSize:"0.8rem"}}>←</span>
+        <span style={{fontSize:"0.65rem",fontWeight:"700",letterSpacing:"0.1em",textTransform:"uppercase",color:"#d4a87a"}}>Options 101 Hub</span>
+      </a>
+      <div style={{width:"22px",height:"22px",background:OR,borderRadius:"5px"}}/>
+    </div>
+  );
+}
+
+function Footer(){
+  return (
+    <div style={{maxWidth:760,margin:"2.5rem auto 0",textAlign:"center",color:MUT,fontSize:"0.7rem",letterSpacing:"0.05em"}}>
+      <span style={{fontFamily:"Georgia,serif",fontStyle:"italic"}}>demystified</span> · for educational purposes only
+    </div>
+  );
+}
+
+function CategoryScreen({ onPick }){
+  var counts = {};
+  TERMS.forEach(function(t){ counts[t.cat] = (counts[t.cat]||0)+1; });
+
+  return (
+    <div className="fu" style={{maxWidth:760,margin:"0 auto",padding:"2rem 1rem"}}>
+      <div style={{height:2,background:"linear-gradient(to right,"+OR+" 0%,transparent 70%)",margin:"0 0 1.5rem"}}/>
+      <h1 style={{margin:"0 0 0.4rem",fontFamily:"Georgia,serif",fontSize:"clamp(1.8rem,5vw,2.6rem)",color:DK,letterSpacing:"-0.03em",lineHeight:1.15}}>Test Your Knowledge</h1>
+      <p style={{margin:"0 0 2rem",color:LBL,fontSize:"0.95rem"}}>Pick a category and flip through flashcards to check what's sticking.</p>
+
+      <button className="cat-card cat-card-all" onClick={function(){ onPick("all"); }} style={{marginBottom:"0.9rem"}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+          <div>
+            <div style={{fontSize:"0.62rem",fontWeight:"700",letterSpacing:"0.15em",textTransform:"uppercase",color:"#9a7a55",marginBottom:"6px"}}>Comprehensive</div>
+            <div style={{fontFamily:"Georgia,serif",fontSize:"1.3rem",fontWeight:"700"}}>Review Everything</div>
+            <div style={{fontSize:"0.78rem",color:"#d4a87a",marginTop:"4px"}}>{TERMS.length} terms across all categories</div>
+          </div>
+          <span style={{fontSize:"1.4rem",color:"#d4a87a"}}>→</span>
+        </div>
+      </button>
+
+      <div style={{display:"grid",gridTemplateColumns:"1fr",gap:"0.75rem"}}>
+        {CATEGORIES.map(function(c){
+          return (
+            <button key={c.id} className="cat-card" onClick={function(){ onPick(c.id); }}>
+              <div style={{position:"absolute",top:0,left:0,width:"4px",height:"100%",background:c.color}}/>
+              <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+                <div style={{display:"flex",alignItems:"center",gap:"0.7rem"}}>
+                  <span style={{fontSize:"1.3rem"}}>{c.icon}</span>
+                  <div>
+                    <div style={{fontSize:"0.95rem",fontWeight:"700",color:DK,fontFamily:"Georgia,serif"}}>{c.label}</div>
+                    <div style={{fontSize:"0.72rem",color:LBL,letterSpacing:"0.05em"}}>{counts[c.id]} terms</div>
+                  </div>
+                </div>
+                <span style={{fontSize:"1.1rem",color:c.color}}>→</span>
+              </div>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function FlashCard({ card, pool, onAnswered }){
+  var [flipped, setFlipped] = useState(false);
+  var [picked, setPicked] = useState(null);
+  var options = useMemo(function(){ return buildOptions(card, pool); }, [card]);
+
+  function handlePick(opt){
+    if (picked) return;
+    var correct = opt === card.short;
+    setPicked({ opt: opt, correct: correct });
+    setFlipped(true);
+    onAnswered(correct);
+  }
+
+  function toggleFlip(){
+    if (!picked) return;
+    setFlipped(function(f){ return !f; });
+  }
+
+  var SvgComp = card.svg ? SVG_MAP[card.svg] : null;
+
+  return (
+    <div className="flip-scene">
+      <div className={"flip-card" + (flipped ? " flipped" : "")}>
+        <div className="flip-face flip-front" style={{padding:"2rem 1.5rem", cursor: picked ? "pointer" : "default"}} onClick={picked ? toggleFlip : undefined}>
+          <div style={{position:"absolute",top:0,left:0,width:"4px",height:"100%",background:OR,borderRadius:"16px 0 0 16px"}}/>
+          <div style={{display:"flex",flexDirection:"column",alignItems:"center",textAlign:"center",marginBottom:"0.5rem"}}>
+            <div style={{fontSize:"0.65rem",letterSpacing:"0.15em",textTransform:"uppercase",color:LBL,marginBottom:"0.6rem"}}>What is this?</div>
+            <div style={{fontFamily:"Georgia,serif",fontSize:"1.7rem",fontWeight:"700",color:DK,letterSpacing:"-0.02em",marginBottom:"1.2rem"}}>{card.term}</div>
+          </div>
+          <div style={{display:"flex",flexDirection:"column",gap:"0.55rem"}}>
+            {options.map(function(opt, i){
+              var isCorrect = opt === card.short;
+              var isPicked = picked && opt === picked.opt;
+              var postStyle = picked ? {
+                cursor:"pointer",
+                opacity: (isCorrect || isPicked) ? 1 : 0.55,
+                borderColor: isCorrect ? GR : BD,
+                borderWidth: isCorrect ? "2px" : "1.5px",
+                background: isCorrect ? "#f0fbf6" : "#fffcf7"
+              } : undefined;
+              return (
+                <button key={i} className="opt-btn" onClick={function(e){ if(picked){ toggleFlip(); } else { handlePick(opt); } }} style={postStyle}>{opt}</button>
+              );
+            })}
+          </div>
+          {picked && (
+            <div style={{textAlign:"center",marginTop:"1rem",fontSize:"0.68rem",color:MUT,letterSpacing:"0.05em"}}>Tap to see the answer →</div>
+          )}
+        </div>
+
+        <div className="flip-face flip-back" onClick={toggleFlip} style={{
+          padding:"2rem 1.5rem",
+          cursor:"pointer",
+          background: picked && picked.correct ? "linear-gradient(130deg,#052e16,#064e3b)" : "linear-gradient(130deg,#2c1208,#451a0a)"
+        }}>
+          <div style={{flex:1,display:"flex",flexDirection:"column",justifyContent:"center"}}>
+            <div style={{display:"flex",alignItems:"center",gap:"0.5rem",marginBottom:"1rem"}}>
+              <span style={{fontSize:"1.3rem"}}>{picked && picked.correct ? "✅" : "❌"}</span>
+              <span style={{fontSize:"0.7rem",fontWeight:"700",letterSpacing:"0.12em",textTransform:"uppercase",color: picked && picked.correct ? "#6ee7b7" : "#f87171"}}>
+                {picked && picked.correct ? "Correct" : "Not quite"}
+              </span>
+            </div>
+            <div style={{fontSize:"0.65rem",fontWeight:"700",letterSpacing:"0.12em",textTransform:"uppercase",color:"#9a7a55",marginBottom:"0.9rem"}}>{card.term}</div>
+            {SvgComp && (
+              <div style={{display:"flex",justifyContent:"center",marginBottom:"1rem",background:"rgba(255,255,255,0.06)",borderRadius:"10px",padding:"0.75rem"}}>
+                <SvgComp/>
+              </div>
+            )}
+            <div style={{fontSize:"0.88rem",lineHeight:1.6,color:"#e8ddd0"}}>{card.reveal}</div>
+            <div style={{textAlign:"center",marginTop:"1.2rem",fontSize:"0.68rem",color:"rgba(255,255,255,0.4)",letterSpacing:"0.05em"}}>Tap to see the options →</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SessionScreen({ catId, onFinish, onExit }){
+  var label = catId === "all" ? "Review Everything" : CATEGORIES.filter(function(c){ return c.id===catId; })[0].label;
+  var pool = catId === "all" ? TERMS : TERMS.filter(function(t){ return t.cat===catId; });
+  var [deck] = useState(function(){ return shuffle(pool); });
+  var [idx, setIdx] = useState(0);
+  var [score, setScore] = useState(0);
+  var [answered, setAnswered] = useState(false);
+
+  function handleAnswered(correct){
+    if (correct) setScore(function(s){ return s+1; });
+    setAnswered(true);
+  }
+
+  function next(){
+    if (idx + 1 >= deck.length){
+      onFinish(score, deck.length);
+    } else {
+      setIdx(idx+1);
+      setAnswered(false);
+    }
+  }
+
+  var pct = ((idx) / deck.length) * 100;
+
+  return (
+    <div className="fu" style={{maxWidth:560,margin:"0 auto",padding:"2rem 1rem"}}>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"0.6rem"}}>
+        <button onClick={onExit} style={{background:"none",border:"none",color:LBL,fontSize:"0.78rem",cursor:"pointer",letterSpacing:"0.05em"}}>← Categories</button>
+        <span style={{fontSize:"0.75rem",color:LBL,letterSpacing:"0.05em"}}>{label} · {idx+1} / {deck.length}</span>
+      </div>
+      <div style={{height:3,background:"#e4d8c8",borderRadius:2,marginBottom:"1.5rem"}}>
+        <div style={{height:"100%",width:pct+"%",background:OR,borderRadius:2,transition:"width 0.3s"}}/>
+      </div>
+
+      <FlashCard key={idx} card={deck[idx]} pool={pool} onAnswered={handleAnswered}/>
+
+      {answered && (
+        <div className="fu" style={{display:"flex",justifyContent:"center",marginTop:"1.2rem"}}>
+          <button onClick={next} style={{background:OR,border:"none",borderRadius:"999px",padding:"10px 28px",color:"#fff",fontWeight:"700",fontSize:"0.82rem",letterSpacing:"0.06em",cursor:"pointer"}}>
+            {idx+1 >= deck.length ? "See Results" : "Next Card"} →
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function SummaryScreen({ catId, score, total, onRetry, onBack }){
+  var label = catId === "all" ? "Review Everything" : CATEGORIES.filter(function(c){ return c.id===catId; })[0].label;
+  var pct = Math.round((score/total)*100);
+  var color = pct >= 80 ? GR : pct >= 50 ? OR : RD;
+
+  return (
+    <div className="fu" style={{maxWidth:560,margin:"0 auto",padding:"2rem 1rem",textAlign:"center"}}>
+      <div style={{fontSize:"0.7rem",letterSpacing:"0.15em",textTransform:"uppercase",color:LBL,marginBottom:"0.5rem"}}>{label}</div>
+      <h1 style={{fontFamily:"Georgia,serif",fontSize:"clamp(1.6rem,5vw,2.2rem)",color:DK,marginBottom:"1.5rem"}}>Session Complete</h1>
+
+      <div style={{background:"linear-gradient(130deg,#1a1108,#2c1d0e)",borderRadius:"14px",padding:"1.8rem 2rem",marginBottom:"1.5rem"}}>
+        <div style={{fontSize:"0.7rem",letterSpacing:"0.15em",textTransform:"uppercase",color:"#9a7a55",marginBottom:"0.4rem"}}>Score</div>
+        <div style={{fontFamily:"Georgia,serif",fontSize:"2.4rem",color:color,fontWeight:"700"}}>{score} / {total}</div>
+        <div style={{fontSize:"0.85rem",color:"#d4a87a",marginTop:"0.3rem"}}>{pct}% correct</div>
+      </div>
+
+      <div style={{display:"flex",gap:"0.75rem",justifyContent:"center",flexWrap:"wrap"}}>
+        <button onClick={onRetry} style={{background:OR,border:"none",borderRadius:"999px",padding:"10px 24px",color:"#fff",fontWeight:"700",fontSize:"0.82rem",letterSpacing:"0.05em",cursor:"pointer"}}>
+          Retry This Category
+        </button>
+        <button onClick={onBack} style={{background:"#fffcf7",border:"1.5px solid "+BD,borderRadius:"999px",padding:"10px 24px",color:DK,fontWeight:"700",fontSize:"0.82rem",letterSpacing:"0.05em",cursor:"pointer"}}>
+          Back to Categories
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function App(){
+  var [view, setView] = useState("categories");
+  var [catId, setCatId] = useState(null);
+  var [result, setResult] = useState({ score:0, total:0 });
+
+  function handlePick(id){
+    setCatId(id);
+    setView("session");
+  }
+  function handleFinish(score, total){
+    setResult({ score:score, total:total });
+    setView("summary");
+  }
+  function handleRetry(){
+    setView("session");
+  }
+  function handleBack(){
+    setView("categories");
+    setCatId(null);
+  }
+
+  return (
+    <div>
+      <Topbar/>
+      {view === "categories" && <CategoryScreen onPick={handlePick}/>}
+      {view === "session" && <SessionScreen key={catId+"-"+Date.now()} catId={catId} onFinish={handleFinish} onExit={handleBack}/>}
+      {view === "summary" && <SummaryScreen catId={catId} score={result.score} total={result.total} onRetry={handleRetry} onBack={handleBack}/>}
+      <Footer/>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+</body>
+</html>
