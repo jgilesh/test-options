@@ -102,9 +102,13 @@ const TERMS = [
   { cat:"chart", term:"Pullback", short:"A short-term move against the trend before price continues in its original direction.", reveal:"A pullback is a short-term move against the overall trend before price continues moving in its original direction. It's different from a reversal, which is a true change in the trend's direction, not just a pause.", svg:"pullback" },
   { cat:"chart", term:"Uptrend", short:"A sustained pattern of price making higher highs and higher lows over time.", reveal:"An uptrend is a sustained pattern of price making higher highs and higher lows over time. It reflects more buying pressure than selling pressure in the market.", svg:"uptrend" },
   { cat:"chart", term:"Downtrend", short:"A sustained pattern of price making lower highs and lower lows over time.", reveal:"A downtrend is a sustained pattern of price making lower highs and lower lows over time. It reflects more selling pressure than buying pressure in the market.", svg:"downtrend" },
-  { cat:"chart", term:"Consolidation", short:"A period where price moves sideways in a tight range instead of trending.", reveal:"Consolidation is a period where price moves sideways in a tight range instead of trending up or down. It often happens after a strong move, as the market pauses before its next direction.", svg:"consolidation" },
+  { cat:"chart", term:"Consolidation", short:"A short pause in a tight range after a strong move, often before a breakout.", reveal:"Consolidation is a short-term pause where price moves sideways in a tight range, usually after a strong move in one direction. It often precedes a breakout or continuation as the market builds pressure before its next move.", svg:"consolidation" },
+  { cat:"chart", term:"Ranging", short:"An extended period of sideways movement with no clear directional bias either way.", reveal:"Ranging describes a market moving sideways between a support and resistance level for an extended period, with no strong directional bias. Unlike consolidation, it isn't necessarily a brief pause between two trending moves, it can persist on its own for a long stretch before any breakout happens.", svg:"ranging" },
   { cat:"chart", term:"Candlestick Body", short:"The thick part of a candle showing the range between open and close.", reveal:"The body of a candle is the thick part that shows the range between the opening and closing price for that period. A filled or red body usually means price closed lower than it opened, while an open or green body means it closed higher.", svg:"body" },
   { cat:"chart", term:"Gap", short:"A space on the chart where price jumps from one level to another with no trading between.", reveal:"A gap is a space on the chart where price jumps from one level to another with no trading in between, usually between one day's close and the next day's open. Gaps often happen after news or earnings and can act like new support or resistance levels.", svg:"gap" },
+  { cat:"chart", term:"Open / High / Low / Close", short:"The first, highest, lowest, and last price a stock trades at during one period.", reveal:"Open, high, low, and close are the four prices that make up a single candle. Open is the first price traded in that period, high and low are the extremes reached, and close is the last price before the period ends.", svg:"ohlc" },
+  { cat:"chart", term:"Reversal", short:"A true change in trend direction, not just a temporary pause.", reveal:"A reversal is a genuine change in the direction of a trend, where an uptrend turns into a downtrend or vice versa. It's different from a pullback, which is only a brief pause before the original trend continues.", svg:"reversal" },
+  { cat:"chart", term:"Overbought / Oversold", short:"When an indicator suggests a stock has moved too far in one direction, too fast.", reveal:"Overbought means an indicator suggests a stock has risen too far too fast and may be due for a pullback, while oversold means the opposite, a stock has fallen sharply and may be due for a bounce. These are signals to watch, not guarantees of what happens next." },
 
   // ---------- OPTIONS MECHANICS ----------
   { cat:"mechanics", term:"Contract", short:"Gives the buyer the right to buy or sell 100 shares at a set price before a set date.", reveal:"A contract gives the buyer the right to buy or sell 100 shares of a stock at a set price before a set date. Members trade the contract itself for profit rather than using it to actually buy or sell the shares." },
@@ -155,6 +159,8 @@ const TERMS = [
   { cat:"chain", term:"Liquidity (on the chain)", short:"How easily a contract can be bought or sold without moving its price much.", reveal:"Liquidity on the chain refers to how easily a contract can be bought or sold without significantly moving its price. Tight spreads and high open interest are both signs of strong liquidity." },
   { cat:"chain", term:"Near-Term vs Far-Term Expiration", short:"Dates coming up soon versus dates much further out.", reveal:"Near-term expirations are dates coming up soon, often within days or weeks, while far-term expirations are further out, sometimes months or years away. Near-term contracts typically have faster time decay." },
   { cat:"chain", term:"Weekly vs Monthly Options", short:"Contracts expiring every week versus on a set monthly schedule.", reveal:"Weekly options expire every week, while monthly options expire on a set monthly schedule, often the third Friday of the month. Monthlies tend to have more liquidity and open interest than most weeklies." },
+  { cat:"chain", term:"Market Order", short:"An order that buys or sells immediately at the current price.", reveal:"A market order buys or sells immediately at whatever price is currently available. It prioritizes speed of execution over getting a specific price." },
+  { cat:"chain", term:"Limit Order", short:"An order that only fills at a specific price or better.", reveal:"A limit order sets a specific price you're willing to buy or sell at, and only fills if the market reaches that price or better. It prioritizes price control, but may not fill at all if the market never gets there." },
 
   // ---------- STRATEGY & SETUP ----------
   { cat:"strategy", term:"Pre-Trade Checklist", short:"A framework of conditions a contract should meet before entering a trade.", reveal:"The Pre-Trade Checklist is Dominique's framework of conditions a contract should meet before entering a trade. It covers Delta range, expiration timing, Theta ratio, open interest, and position size." },
@@ -176,6 +182,9 @@ const TERMS = [
   { cat:"strategy", term:"Risk Tolerance", short:"How much loss a trader is personally willing and able to accept.", reveal:"Risk tolerance is how much loss a trader is personally willing and able to accept on a given trade or in their overall portfolio. It shapes decisions like position size and which strategies are appropriate." },
   { cat:"strategy", term:"Account Risk (per-trade %)", short:"The percentage of total account value a trader risks on a single position.", reveal:"Account risk per trade is the percentage of total account value a trader is willing to risk on any single position. Keeping this percentage small protects the account from a string of losing trades." },
   { cat:"strategy", term:"Trading Style", short:"The general approach a trader takes, such as Scalp, Day Trade, Swing, or LEAP.", reveal:"Trading style refers to the general approach a trader takes, such as Scalp, Day Trade, Swing, or LEAP. Each style differs in holding time, risk profile, and how closely the trade needs to be monitored." },
+  { cat:"strategy", term:"Range Trading", short:"Buying near support and selling near resistance during a sideways market.", reveal:"Range trading means buying near support and selling near resistance while a stock moves sideways between those two levels. It works well during consolidation but can lose money fast if the range eventually breaks." },
+  { cat:"strategy", term:"Target Price", short:"The price point where a trader plans to sell and take profit.", reveal:"Target price is the price point where a trader plans to sell a position and lock in profit. Setting it ahead of time, like the profit target, helps remove emotion from the decision once the trade is live." },
+  { cat:"strategy", term:"Momentum / Momentum Trading", short:"Trading in the direction of a stock's current strong price movement.", reveal:"Momentum is the speed and strength behind a stock's price movement, and momentum trading means buying into that movement while it's strong rather than waiting for a pullback. It works best when buying pressure is clearly outweighing selling pressure." },
 
   // ---------- INVESTING FOUNDATIONS ----------
   { cat:"investing", term:"Diversification", short:"Spreading investments across different assets so no single one can sink the portfolio.", reveal:"Diversification means spreading investments across different assets so no single one can sink the whole portfolio. It's a way of managing risk rather than trying to eliminate it entirely." },
@@ -193,6 +202,20 @@ const TERMS = [
   { cat:"investing", term:"Index (e.g. S&P 500)", short:"Tracks the performance of a specific group of stocks as a benchmark.", reveal:"An index tracks the performance of a specific group of stocks, like the 500 largest U.S. companies in the S&P 500. It's used as a benchmark to measure how the broader market or a sector is performing." },
   { cat:"investing", term:"Compounding", short:"When investment gains generate their own future gains over time.", reveal:"Compounding is the process where investment gains generate their own future gains over time. The longer money stays invested, the more powerful the compounding effect becomes." },
   { cat:"investing", term:"Risk vs Return", short:"Higher potential returns usually come with higher potential risk.", reveal:"Risk versus return describes the general principle that higher potential returns usually come with higher potential risk. Understanding this tradeoff helps investors choose investments that match their comfort level and goals." },
+  { cat:"investing", term:"Investors vs Traders", short:"One group invests with a longer-term view, the other trades to profit from shorter-term price moves.", reveal:"Investors put their money into assets expecting returns over a longer timeframe, while traders buy and sell more frequently to profit from shorter-term price movement. Both approaches are valid, they just differ in time horizon and how closely the position needs to be managed." },
+  { cat:"investing", term:"Blue-Chip Stocks", short:"Stocks of the largest, most established companies in the market.", reveal:"Blue-chip stocks belong to the biggest, most established companies in the market. They're generally seen as more stable, though stable doesn't mean risk-free." },
+  { cat:"investing", term:"Growth Stocks", short:"Stocks of companies with high potential to grow earnings quickly.", reveal:"Growth stocks belong to companies expected to grow earnings faster than the broader market. They often reinvest profits instead of paying dividends, betting on future expansion over current income." },
+  { cat:"investing", term:"Value Stocks", short:"Stocks that appear cheap relative to their earnings or fundamentals.", reveal:"Value stocks trade at a low price relative to their earnings or other fundamentals, like a low P/E ratio. Investors who buy them are betting the market is undervaluing the company." },
+  { cat:"investing", term:"Penny Stocks", short:"Stocks that trade at a very low price per share.", reveal:"Penny stocks trade at a very low price per share, often under $5. They can be highly volatile and are generally considered higher risk due to lower liquidity and less public information." },
+  { cat:"investing", term:"Long Position", short:"Buying an asset expecting its price to rise.", reveal:"A long position means buying a stock, option, or other asset with the expectation that its value will rise. It's the most common and intuitive way to invest.", svg:"longpos" },
+  { cat:"investing", term:"Short Position", short:"Borrowing and selling shares, betting the price will fall before buying them back.", reveal:"A short position means selling borrowed shares with the expectation that the price will fall, then buying them back later at a lower price to return what was borrowed. It's a bet against a stock rather than on it.", svg:"shortpos" },
+  { cat:"investing", term:"Initial Public Offering (IPO)", short:"The first time a company sells its shares to the public.", reveal:"An IPO is when a private company sells shares to the public for the first time to raise capital. It marks the company's transition from privately held to publicly traded." },
+  { cat:"investing", term:"Stock Split", short:"When a company divides its shares to lower the price per share and increase share count.", reveal:"A stock split increases the number of outstanding shares while proportionally lowering the price of each one, like turning one $200 share into two $100 shares. The total value held by an investor stays the same, only the number of shares and per-share price change." },
+  { cat:"investing", term:"P/E Ratio (Price-to-Earnings Ratio)", short:"Compares a stock's price to its earnings per share.", reveal:"The price-to-earnings ratio compares a stock's current price to its earnings per share. A lower P/E can suggest a stock is cheaper relative to its earnings, though it needs context from the rest of the industry to mean much on its own." },
+  { cat:"investing", term:"Dividend Yield", short:"A dividend's annual value expressed as a percentage of the stock's price.", reveal:"Dividend yield expresses a company's annual dividend as a percentage of its current stock price. It's a quick way to compare how much income different dividend-paying stocks generate relative to their price." },
+  { cat:"investing", term:"Overvalued / Undervalued", short:"When a stock's price sits above or below what its fundamentals suggest it's worth.", reveal:"A stock is overvalued when its price is higher than its fundamentals suggest it should be, and undervalued when its price is lower. These judgments come from comparing price to earnings, growth, or other company fundamentals." },
+  { cat:"investing", term:"Average Down", short:"Buying more shares of a stock at a lower price than your original purchase.", reveal:"Averaging down means buying additional shares of a stock you already own at a price lower than your original purchase. It lowers your average cost per share, but only makes sense if the original thesis for owning the stock still holds." },
+  { cat:"investing", term:"Cost Averaging (Dollar-Cost Averaging)", short:"Investing the same amount of money on a regular schedule regardless of price.", reveal:"Cost averaging means investing a fixed amount of money on a regular schedule, regardless of whether the price is high or low that day. Over time, this smooths out the average price paid and removes the pressure of trying to time the market." },
 ];
 
 /* ============== SVG GRAPHICS (hand-rolled, for flagged chart terms) ============== */
@@ -292,10 +315,22 @@ function SvgGap(){
 function SvgConsolidation(){
   return (
     <svg viewBox="0 0 200 120" style={{width:"100%",maxWidth:180,height:"auto"}}>
-      <line x1="15" y1="35" x2="185" y2="35" stroke={GD} strokeWidth="1.3" strokeDasharray="3,3"/>
-      <line x1="15" y1="62" x2="185" y2="62" stroke={GD} strokeWidth="1.3" strokeDasharray="3,3"/>
-      <polyline points="15,40 50,55 85,42 120,58 155,44 185,52" fill="none" stroke={DK} strokeWidth="2.5" strokeLinejoin="round"/>
-      <text x="100" y="100" textAnchor="middle" fontSize="9" fill={GD} fontFamily="Georgia,serif">sideways range</text>
+      <line x1="60" y1="35" x2="140" y2="35" stroke={GD} strokeWidth="1.3" strokeDasharray="3,3"/>
+      <line x1="60" y1="62" x2="140" y2="62" stroke={GD} strokeWidth="1.3" strokeDasharray="3,3"/>
+      <polyline points="15,95 45,55" fill="none" stroke={DK} strokeWidth="2.5" strokeLinejoin="round" opacity="0.35"/>
+      <polyline points="60,42 80,55 100,42 120,58 140,48" fill="none" stroke={DK} strokeWidth="2.5" strokeLinejoin="round"/>
+      <polyline points="140,48 165,20 185,10" fill="none" stroke={DK} strokeWidth="2.5" strokeLinejoin="round" opacity="0.35" strokeDasharray="2,3"/>
+      <text x="100" y="105" textAnchor="middle" fontSize="9" fill={GD} fontFamily="Georgia,serif">brief pause, then breaks</text>
+    </svg>
+  );
+}
+function SvgRanging(){
+  return (
+    <svg viewBox="0 0 200 120" style={{width:"100%",maxWidth:180,height:"auto"}}>
+      <line x1="10" y1="30" x2="190" y2="30" stroke={PU} strokeWidth="1.3" strokeDasharray="3,3"/>
+      <line x1="10" y1="80" x2="190" y2="80" stroke={PU} strokeWidth="1.3" strokeDasharray="3,3"/>
+      <polyline points="10,55 30,32 50,78 70,33 90,77 110,34 130,76 150,32 170,78 190,50" fill="none" stroke={DK} strokeWidth="2.5" strokeLinejoin="round"/>
+      <text x="100" y="105" textAnchor="middle" fontSize="9" fill={PU} fontFamily="Georgia,serif">extended back-and-forth</text>
     </svg>
   );
 }
@@ -338,7 +373,54 @@ function SvgDowntrend(){
     </svg>
   );
 }
-const SVG_MAP = { candle:SvgCandle, wick:SvgWick, support:SvgSupport, resistance:SvgResistance, trendline:SvgTrendline, ma:SvgMA, body:SvgBody, gap:SvgGap, consolidation:SvgConsolidation, pullback:SvgPullback, breakout:SvgBreakout, uptrend:SvgUptrend, downtrend:SvgDowntrend };
+function SvgOHLC(){
+  return (
+    <svg viewBox="0 0 200 120" style={{width:"100%",maxWidth:180,height:"auto"}}>
+      <line x1="100" y1="12" x2="100" y2="32" stroke={GR} strokeWidth="2"/>
+      <rect x="78" y="32" width="44" height="50" fill={GR} rx="2"/>
+      <line x1="100" y1="82" x2="100" y2="105" stroke={GR} strokeWidth="2"/>
+      <text x="148" y="16" fontSize="8" fill={DK} fontFamily="Georgia,serif">high</text>
+      <line x1="123" y1="14" x2="143" y2="14" stroke={LBL} strokeWidth="1"/>
+      <text x="148" y="108" fontSize="8" fill={DK} fontFamily="Georgia,serif">low</text>
+      <line x1="123" y1="103" x2="143" y2="103" stroke={LBL} strokeWidth="1"/>
+      <text x="8" y="36" fontSize="8" fill={DK} fontFamily="Georgia,serif">open</text>
+      <line x1="35" y1="34" x2="76" y2="34" stroke={LBL} strokeWidth="1"/>
+      <text x="4" y="86" fontSize="8" fill={DK} fontFamily="Georgia,serif">close</text>
+      <line x1="35" y1="82" x2="76" y2="82" stroke={LBL} strokeWidth="1"/>
+    </svg>
+  );
+}
+function SvgReversal(){
+  return (
+    <svg viewBox="0 0 200 120" style={{width:"100%",maxWidth:180,height:"auto"}}>
+      <polyline points="15,90 50,70 80,52 110,45" fill="none" stroke={GR} strokeWidth="2.5" strokeLinejoin="round"/>
+      <polyline points="110,45 140,55 160,72 185,90" fill="none" stroke={RD} strokeWidth="2.5" strokeLinejoin="round"/>
+      <circle cx="110" cy="45" r="4.5" fill={DK}/>
+      <text x="110" y="32" textAnchor="middle" fontSize="9" fill={DK} fontFamily="Georgia,serif">reversal</text>
+    </svg>
+  );
+}
+function SvgLongPosition(){
+  return (
+    <svg viewBox="0 0 200 120" style={{width:"100%",maxWidth:180,height:"auto"}}>
+      <polyline points="25,95 70,75 110,60 150,38" fill="none" stroke={GR} strokeWidth="2.5" strokeLinejoin="round"/>
+      <path d="M150,38 L138,46 L146,52 Z" fill={GR}/>
+      <path d="M150,38 L158,30 L162,42 Z" fill={GR}/>
+      <text x="100" y="112" textAnchor="middle" fontSize="9" fill={GR} fontFamily="Georgia,serif">buy, expect price to rise</text>
+    </svg>
+  );
+}
+function SvgShortPosition(){
+  return (
+    <svg viewBox="0 0 200 120" style={{width:"100%",maxWidth:180,height:"auto"}}>
+      <polyline points="25,30 70,48 110,62 150,85" fill="none" stroke={RD} strokeWidth="2.5" strokeLinejoin="round"/>
+      <path d="M150,85 L138,77 L146,71 Z" fill={RD}/>
+      <path d="M150,85 L158,93 L162,81 Z" fill={RD}/>
+      <text x="100" y="112" textAnchor="middle" fontSize="9" fill={RD} fontFamily="Georgia,serif">sell borrowed, expect fall</text>
+    </svg>
+  );
+}
+const SVG_MAP = { candle:SvgCandle, wick:SvgWick, support:SvgSupport, resistance:SvgResistance, trendline:SvgTrendline, ma:SvgMA, body:SvgBody, gap:SvgGap, consolidation:SvgConsolidation, pullback:SvgPullback, breakout:SvgBreakout, uptrend:SvgUptrend, downtrend:SvgDowntrend, ohlc:SvgOHLC, reversal:SvgReversal, longpos:SvgLongPosition, shortpos:SvgShortPosition, ranging:SvgRanging };
 
 /* ============== HELPERS ============== */
 function shuffle(arr){
