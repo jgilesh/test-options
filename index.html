@@ -63,6 +63,9 @@ body { background:#F5F0E8; font-family:system-ui,-apple-system,sans-serif; color
 .cat-card-all {
   background:linear-gradient(130deg,#1a1108,#2c1d0e); border:none; color:#fff;
 }
+.cat-card-random {
+  background:#F5853F; border:none; color:#fff;
+}
 </style>
 </head>
 <body>
@@ -76,7 +79,7 @@ const DK = "#1a1108", CA = "#fffcf7", BD = "#e8ddd0", LBL = "#8a7560", MUT = "#b
 
 /* ============== TERM DATA ============== */
 const CATEGORIES = [
-  { id: "chart", label: "Chart Basics", color: OR, icon: "📈" },
+  { id: "technical", label: "Technical Analysis", color: OR, icon: "📈" },
   { id: "mechanics", label: "Options Mechanics", color: PU, icon: "📜" },
   { id: "greeks", label: "The Greeks", color: GD, icon: "Δ" },
   { id: "chain", label: "The Options Chain", color: "#2A7ED4", icon: "🔗" },
@@ -86,29 +89,29 @@ const CATEGORIES = [
 
 const TERMS = [
   // ---------- CHART BASICS ----------
-  { cat:"chart", term:"Candle", short:"A single bar showing the open, high, low, and close price for one time period.", reveal:"A single candle shows the open, high, low, and close price for one time period on a chart. The thick part (the body) shows the range between open and close, while the thin lines above and below (wicks) show the highest and lowest prices reached during that period.", svg:"candle" },
-  { cat:"chart", term:"Wick", short:"The thin line above or below a price bar showing the highest and lowest price reached.", reveal:"The wick is the thin line above or below a candle's body that shows the highest and lowest price reached during that period. A long wick means price moved sharply in that direction before pulling back, which can hint at rejection at that level.", svg:"wick" },
-  { cat:"chart", term:"Support", short:"A price level where a stock has historically stopped falling and bounced back up.", reveal:"Support is a price level where a stock has historically stopped falling and bounced back up. Traders watch these levels closely because price often reacts there again, either bouncing higher or breaking through to fall further.", svg:"support" },
-  { cat:"chart", term:"Resistance", short:"A price level where a stock has historically stopped rising and turned back down.", reveal:"Resistance is a price level where a stock has historically stopped rising and turned back down. It works like a ceiling, and a break above it can signal the start of a stronger move higher.", svg:"resistance" },
-  { cat:"chart", term:"Trend Line", short:"A line connecting a series of highs or lows to show price's general direction.", reveal:"A trend line connects a series of highs or lows on a chart to show the general direction price is moving. An upward-sloping trend line connects rising lows, while a downward-sloping one connects falling highs.", svg:"trendline" },
-  { cat:"chart", term:"Moving Average", short:"A smoothed line plotting the average price over a set number of periods.", reveal:"A moving average smooths out price by plotting the average price over a set number of periods, like 20 or 50 days. It helps traders see the underlying trend without the noise of daily price swings.", svg:"ma" },
-  { cat:"chart", term:"Volume", short:"The number of shares or contracts traded during a given period.", reveal:"Volume is the number of shares or contracts traded during a given period. Higher volume on a price move suggests stronger conviction behind that move, while low volume suggests the move may not hold." },
-  { cat:"chart", term:"Indicator", short:"A calculation based on price and volume that helps interpret what a chart shows.", reveal:"An indicator is a calculation based on price and volume that helps traders interpret what a chart is showing. RSI and MACD are both examples of indicators traders layer on top of a price chart." },
-  { cat:"chart", term:"RSI (Relative Strength Index)", short:"Measures how fast and far price has moved recently, on a 0 to 100 scale.", reveal:"RSI is an indicator that measures how fast and how far price has moved recently, on a scale from 0 to 100. Readings above 70 suggest a stock may be overbought, while readings below 30 suggest it may be oversold." },
-  { cat:"chart", term:"MACD", short:"Compares two moving averages to show momentum and potential trend changes.", reveal:"MACD is an indicator that compares two moving averages to show momentum and potential trend changes. When the faster line crosses above the slower one, it can signal upward momentum building." },
-  { cat:"chart", term:"Chart Pattern", short:"A recognizable shape formed by price movement that traders use to anticipate moves.", reveal:"A chart pattern is a recognizable shape formed by price movement over time, like a triangle or a head and shoulders. Traders use these patterns to anticipate what price might do next based on how it has behaved before." },
-  { cat:"chart", term:"Timeframe", short:"The length of time each candle or bar on a chart represents.", reveal:"Timeframe refers to the length of time each candle or bar on a chart represents, such as 1 minute, 1 hour, or 1 day. Shorter timeframes show more detail and noise, while longer timeframes show the bigger picture." },
-  { cat:"chart", term:"Breakout", short:"When price moves decisively above resistance or below support.", reveal:"A breakout happens when price moves decisively above resistance or below support. Traders watch for breakouts because they can signal the start of a stronger directional move.", svg:"breakout" },
-  { cat:"chart", term:"Pullback", short:"A short-term move against the trend before price continues in its original direction.", reveal:"A pullback is a short-term move against the overall trend before price continues moving in its original direction. It's different from a reversal, which is a true change in the trend's direction, not just a pause.", svg:"pullback" },
-  { cat:"chart", term:"Uptrend", short:"A sustained pattern of price making higher highs and higher lows over time.", reveal:"An uptrend is a sustained pattern of price making higher highs and higher lows over time. It reflects more buying pressure than selling pressure in the market.", svg:"uptrend" },
-  { cat:"chart", term:"Downtrend", short:"A sustained pattern of price making lower highs and lower lows over time.", reveal:"A downtrend is a sustained pattern of price making lower highs and lower lows over time. It reflects more selling pressure than buying pressure in the market.", svg:"downtrend" },
-  { cat:"chart", term:"Consolidation", short:"A short pause in a tight range after a strong move, often before a breakout.", reveal:"Consolidation is a short-term pause where price moves sideways in a tight range, usually after a strong move in one direction. It often precedes a breakout or continuation as the market builds pressure before its next move.", svg:"consolidation" },
-  { cat:"chart", term:"Ranging", short:"An extended period of sideways movement with no clear directional bias either way.", reveal:"Ranging describes a market moving sideways between a support and resistance level for an extended period, with no strong directional bias. Unlike consolidation, it isn't necessarily a brief pause between two trending moves, it can persist on its own for a long stretch before any breakout happens.", svg:"ranging" },
-  { cat:"chart", term:"Candlestick Body", short:"The thick part of a candle showing the range between open and close.", reveal:"The body of a candle is the thick part that shows the range between the opening and closing price for that period. A filled or red body usually means price closed lower than it opened, while an open or green body means it closed higher.", svg:"body" },
-  { cat:"chart", term:"Gap", short:"A space on the chart where price jumps from one level to another with no trading between.", reveal:"A gap is a space on the chart where price jumps from one level to another with no trading in between, usually between one day's close and the next day's open. Gaps often happen after news or earnings and can act like new support or resistance levels.", svg:"gap" },
-  { cat:"chart", term:"Open / High / Low / Close", short:"The first, highest, lowest, and last price a stock trades at during one period.", reveal:"Open, high, low, and close are the four prices that make up a single candle. Open is the first price traded in that period, high and low are the extremes reached, and close is the last price before the period ends.", svg:"ohlc" },
-  { cat:"chart", term:"Reversal", short:"A true change in trend direction, not just a temporary pause.", reveal:"A reversal is a genuine change in the direction of a trend, where an uptrend turns into a downtrend or vice versa. It's different from a pullback, which is only a brief pause before the original trend continues.", svg:"reversal" },
-  { cat:"chart", term:"Overbought / Oversold", short:"When an indicator suggests a stock has moved too far in one direction, too fast.", reveal:"Overbought means an indicator suggests a stock has risen too far too fast and may be due for a pullback, while oversold means the opposite, a stock has fallen sharply and may be due for a bounce. These are signals to watch, not guarantees of what happens next." },
+  { cat:"technical", term:"Candle", short:"A single bar showing the open, high, low, and close price for one time period.", reveal:"A single candle shows the open, high, low, and close price for one time period on a chart. The thick part (the body) shows the range between open and close, while the thin lines above and below (wicks) show the highest and lowest prices reached during that period.", svg:"candle" },
+  { cat:"technical", term:"Wick", short:"The thin line above or below a price bar showing the highest and lowest price reached.", reveal:"The wick is the thin line above or below a candle's body that shows the highest and lowest price reached during that period. A long wick means price moved sharply in that direction before pulling back, which can hint at rejection at that level.", svg:"wick" },
+  { cat:"technical", term:"Support", short:"A price level where a stock has historically stopped falling and bounced back up.", reveal:"Support is a price level where a stock has historically stopped falling and bounced back up. Traders watch these levels closely because price often reacts there again, either bouncing higher or breaking through to fall further.", svg:"support" },
+  { cat:"technical", term:"Resistance", short:"A price level where a stock has historically stopped rising and turned back down.", reveal:"Resistance is a price level where a stock has historically stopped rising and turned back down. It works like a ceiling, and a break above it can signal the start of a stronger move higher.", svg:"resistance" },
+  { cat:"technical", term:"Trend Line", short:"A line connecting a series of highs or lows to show price's general direction.", reveal:"A trend line connects a series of highs or lows on a chart to show the general direction price is moving. An upward-sloping trend line connects rising lows, while a downward-sloping one connects falling highs.", svg:"trendline" },
+  { cat:"technical", term:"Moving Average", short:"A smoothed line plotting the average price over a set number of periods.", reveal:"A moving average smooths out price by plotting the average price over a set number of periods, like 20 or 50 days. It helps traders see the underlying trend without the noise of daily price swings.", svg:"ma" },
+  { cat:"technical", term:"Volume", short:"The number of shares or contracts traded during a given period.", reveal:"Volume is the number of shares or contracts traded during a given period. Higher volume on a price move suggests stronger conviction behind that move, while low volume suggests the move may not hold." },
+  { cat:"technical", term:"Indicator", short:"A calculation based on price and volume that helps interpret what a chart shows.", reveal:"An indicator is a calculation based on price and volume that helps traders interpret what a chart is showing. RSI and MACD are both examples of indicators traders layer on top of a price chart." },
+  { cat:"technical", term:"RSI (Relative Strength Index)", short:"Measures how fast and far price has moved recently, on a 0 to 100 scale.", reveal:"RSI is an indicator that measures how fast and how far price has moved recently, on a scale from 0 to 100. Readings above 70 suggest a stock may be overbought, while readings below 30 suggest it may be oversold." },
+  { cat:"technical", term:"MACD", short:"Compares two moving averages to show momentum and potential trend changes.", reveal:"MACD is an indicator that compares two moving averages to show momentum and potential trend changes. When the faster line crosses above the slower one, it can signal upward momentum building." },
+  { cat:"technical", term:"Chart Pattern", short:"A recognizable shape formed by price movement that traders use to anticipate moves.", reveal:"A chart pattern is a recognizable shape formed by price movement over time, like a triangle or a head and shoulders. Traders use these patterns to anticipate what price might do next based on how it has behaved before." },
+  { cat:"technical", term:"Timeframe", short:"The length of time each candle or bar on a chart represents.", reveal:"Timeframe refers to the length of time each candle or bar on a chart represents, such as 1 minute, 1 hour, or 1 day. Shorter timeframes show more detail and noise, while longer timeframes show the bigger picture." },
+  { cat:"technical", term:"Breakout", short:"When price moves decisively above a resistance level.", reveal:"A breakout happens when price pushes decisively above a resistance level, which can signal the start of a stronger move higher. The old ceiling frequently becomes the new floor afterward.", svg:"breakout" },
+  { cat:"technical", term:"Pullback", short:"A short-term move against the trend before price continues in its original direction.", reveal:"A pullback is a short-term move against the overall trend before price continues moving in its original direction. It's different from a reversal, which is a true change in the trend's direction, not just a pause.", svg:"pullback" },
+  { cat:"technical", term:"Uptrend", short:"A sustained pattern of price making higher highs and higher lows over time.", reveal:"An uptrend is a sustained pattern of price making higher highs and higher lows over time. It reflects more buying pressure than selling pressure in the market.", svg:"uptrend" },
+  { cat:"technical", term:"Downtrend", short:"A sustained pattern of price making lower highs and lower lows over time.", reveal:"A downtrend is a sustained pattern of price making lower highs and lower lows over time. It reflects more selling pressure than buying pressure in the market.", svg:"downtrend" },
+  { cat:"technical", term:"Consolidation", short:"A short pause in a tight range after a strong move, often before a breakout.", reveal:"Consolidation is a short-term pause where price moves sideways in a tight range, usually after a strong move in one direction. It often precedes a breakout or continuation as the market builds pressure before its next move.", svg:"consolidation" },
+  { cat:"technical", term:"Ranging", short:"An extended period of sideways movement with no clear directional bias either way.", reveal:"Ranging describes a market moving sideways between a support and resistance level for an extended period, with no strong directional bias. Unlike consolidation, it isn't necessarily a brief pause between two trending moves, it can persist on its own for a long stretch before any breakout happens.", svg:"ranging" },
+  { cat:"technical", term:"Candlestick Body", short:"The thick part of a candle showing the range between open and close.", reveal:"The body of a candle is the thick part that shows the range between the opening and closing price for that period. A filled or red body usually means price closed lower than it opened, while an open or green body means it closed higher.", svg:"body" },
+  { cat:"technical", term:"Gap", short:"A space on the chart where price jumps from one level to another with no trading between.", reveal:"A gap is a space on the chart where price jumps from one level to another with no trading in between, usually between one day's close and the next day's open. Gaps often happen after news or earnings and can act like new support or resistance levels.", svg:"gap" },
+  { cat:"technical", term:"Open / High / Low / Close", short:"The first, highest, lowest, and last price a stock trades at during one period.", reveal:"Open, high, low, and close are the four prices that make up a single candle. Open is the first price traded in that period, high and low are the extremes reached, and close is the last price before the period ends.", svg:"ohlc" },
+  { cat:"technical", term:"Reversal", short:"A true change in trend direction, not just a temporary pause.", reveal:"A reversal is a genuine change in the direction of a trend, where an uptrend turns into a downtrend or vice versa. It's different from a pullback, which is only a brief pause before the original trend continues.", svg:"reversal" },
+  { cat:"technical", term:"Overbought / Oversold", short:"When an indicator suggests a stock has moved too far in one direction, too fast.", reveal:"Overbought means an indicator suggests a stock has risen too far too fast and may be due for a pullback, while oversold means the opposite, a stock has fallen sharply and may be due for a bounce. These are signals to watch, not guarantees of what happens next." },
 
   // ---------- OPTIONS MECHANICS ----------
   { cat:"mechanics", term:"Contract", short:"Gives the buyer the right to buy or sell 100 shares at a set price before a set date.", reveal:"A contract gives the buyer the right to buy or sell 100 shares of a stock at a set price before a set date. Members trade the contract itself for profit rather than using it to actually buy or sell the shares." },
@@ -159,8 +162,8 @@ const TERMS = [
   { cat:"chain", term:"Liquidity (on the chain)", short:"How easily a contract can be bought or sold without moving its price much.", reveal:"Liquidity on the chain refers to how easily a contract can be bought or sold without significantly moving its price. Tight spreads and high open interest are both signs of strong liquidity." },
   { cat:"chain", term:"Near-Term vs Far-Term Expiration", short:"Dates coming up soon versus dates much further out.", reveal:"Near-term expirations are dates coming up soon, often within days or weeks, while far-term expirations are further out, sometimes months or years away. Near-term contracts typically have faster time decay." },
   { cat:"chain", term:"Weekly vs Monthly Options", short:"Contracts expiring every week versus on a set monthly schedule.", reveal:"Weekly options expire every week, while monthly options expire on a set monthly schedule, often the third Friday of the month. Monthlies tend to have more liquidity and open interest than most weeklies." },
-  { cat:"chain", term:"Market Order", short:"An order that buys or sells immediately at the current price.", reveal:"A market order buys or sells immediately at whatever price is currently available. It prioritizes speed of execution over getting a specific price." },
-  { cat:"chain", term:"Limit Order", short:"An order that only fills at a specific price or better.", reveal:"A limit order sets a specific price you're willing to buy or sell at, and only fills if the market reaches that price or better. It prioritizes price control, but may not fill at all if the market never gets there." },
+  { cat:"strategy", term:"Market Order", short:"An order that buys or sells immediately at the current price.", reveal:"A market order buys or sells immediately at whatever price is currently available. It prioritizes speed of execution over getting a specific price." },
+  { cat:"strategy", term:"Limit Order", short:"An order that only fills at a specific price or better.", reveal:"A limit order sets a specific price you're willing to buy or sell at, and only fills if the market reaches that price or better. It prioritizes price control, but may not fill at all if the market never gets there." },
 
   // ---------- STRATEGY & SETUP ----------
   { cat:"strategy", term:"Pre-Trade Checklist", short:"A framework of conditions a contract should meet before entering a trade.", reveal:"The Pre-Trade Checklist is Dominique's framework of conditions a contract should meet before entering a trade. It covers Delta range, expiration timing, Theta ratio, open interest, and position size." },
@@ -216,6 +219,60 @@ const TERMS = [
   { cat:"investing", term:"Overvalued / Undervalued", short:"When a stock's price sits above or below what its fundamentals suggest it's worth.", reveal:"A stock is overvalued when its price is higher than its fundamentals suggest it should be, and undervalued when its price is lower. These judgments come from comparing price to earnings, growth, or other company fundamentals." },
   { cat:"investing", term:"Average Down", short:"Buying more shares of a stock at a lower price than your original purchase.", reveal:"Averaging down means buying additional shares of a stock you already own at a price lower than your original purchase. It lowers your average cost per share, but only makes sense if the original thesis for owning the stock still holds." },
   { cat:"investing", term:"Cost Averaging (Dollar-Cost Averaging)", short:"Investing the same amount of money on a regular schedule regardless of price.", reveal:"Cost averaging means investing a fixed amount of money on a regular schedule, regardless of whether the price is high or low that day. Over time, this smooths out the average price paid and removes the pressure of trying to time the market." },
+  { cat:"technical", term:"Doji", short:"A candle where open and close finish nearly equal, leaving almost no body.", reveal:"A doji forms when the open and close finish at nearly the same price, leaving almost no body. It shows that neither buyers nor sellers gained ground, and it carries the most weight when it appears after an extended run in one direction.", svg:"doji" },
+  { cat:"technical", term:"Hammer", short:"A small body with a long lower wick, forming after a decline.", reveal:"A hammer is a candle with a small body and a long lower wick that forms after a decline. Price sold off during the period and buyers pushed it back up to close near the high, which is the visual record of a level being defended.", svg:"hammer" },
+  { cat:"technical", term:"Shooting Star", short:"A small body with a long upper wick, forming after an advance.", reveal:"A shooting star is a candle with a small body and a long upper wick that forms after an advance. Price ran higher during the period and sellers drove it back down to close near the low, which makes it a bearish signal that is strongest at resistance.", svg:"shootingstar" },
+  { cat:"technical", term:"Engulfing Candle", short:"One candle whose body completely covers the body of the candle before it.", reveal:"An engulfing candle has a body that completely covers the body of the candle before it. A bullish engulfing swallows a prior red candle and a bearish engulfing swallows a prior green one, and either way it marks a visible handoff of control between buyers and sellers.", svg:"engulfing" },
+  { cat:"technical", term:"Breakdown", short:"When price moves decisively below a support level.", reveal:"A breakdown happens when price moves decisively below a support level. The old floor frequently becomes the new ceiling afterward, which is the mirror image of what happens following a breakout.", svg:"breakdown" },
+  { cat:"technical", term:"False Breakout", short:"When price clears a level briefly and then fails back into the prior range.", reveal:"A false breakout happens when price pushes past a level and then fails back into the range it came from. It is the main reason traders wait for a candle to close beyond a level rather than entering the moment it is touched." },
+  { cat:"technical", term:"Swing High / Swing Low", short:"A peak or trough where price turned and changed direction.", reveal:"A swing high is a peak where price turned back down, and a swing low is a trough where price turned back up. These points are what trend lines connect, and they mark the levels commonly used to place stops and targets." },
+  { cat:"technical", term:"Golden Cross", short:"When the 50 day average crosses above the 200 day average.", reveal:"A golden cross happens when the 50 day moving average crosses above the 200 day moving average. It is widely read as a bullish shift in the longer term trend." },
+  { cat:"technical", term:"Death Cross", short:"When the 50 day average crosses below the 200 day average.", reveal:"A death cross happens when the 50 day moving average crosses below the 200 day moving average. It is widely read as a bearish shift in the longer term trend." },
+  { cat:"technical", term:"Simple Moving Average (SMA)", short:"An average that weights every period in its calculation equally.", reveal:"A simple moving average weights every period in its calculation equally. It is the default starting point and moves more smoothly than its exponential counterpart." },
+  { cat:"technical", term:"Exponential Moving Average (EMA)", short:"An average that weights recent prices more heavily, so it turns faster.", reveal:"An exponential moving average weights recent prices more heavily than older ones, so it reacts to a change in direction faster. Shorter timeframe traders tend to prefer it for exactly that reason." },
+  { cat:"technical", term:"Relative Volume", short:"How today's activity compares to the average, rather than the raw number.", reveal:"Relative volume compares today's trading activity against the recent average rather than looking at the raw number. What matters is whether the current session is running above or below that average line, since that is what signals unusual interest." },
+  { cat:"technical", term:"VWAP", short:"An intraday line showing the average price weighted by volume at each level.", reveal:"VWAP stands for volume weighted average price, an intraday line showing the average price weighted by how much volume traded at each level. Day traders and scalpers use it as a reference for whether price is trading rich or cheap for the session." },
+  { cat:"technical", term:"Psychological Level", short:"A round number where orders cluster, making it act like real support or resistance.", reveal:"A psychological level is a round number such as $50, $100, or $150 where traders cluster their orders. The level becomes real precisely because so many people are watching the same number." },
+  { cat:"mechanics", term:"Buy to Open", short:"The order that starts a new position by purchasing a contract.", reveal:"Buy to open is the order used to start a new position by purchasing a contract. Selecting sell to open by mistake creates the opposite position with a completely different risk profile." },
+  { cat:"mechanics", term:"Sell to Close", short:"The order that exits a position by selling a contract already held.", reveal:"Sell to close is the order used to exit a position by selling a contract already held. This is how members realize a gain, rather than exercising the contract." },
+  { cat:"mechanics", term:"Break Even", short:"The strike plus the premium paid, describing what is needed at expiration.", reveal:"Break even on a call is the strike price plus the premium paid, and it describes what would be needed if the contract were held all the way to expiration. It is a reference point rather than a target, because the position is normally closed well before then." },
+  { cat:"mechanics", term:"Leverage", short:"Controlling exposure to 100 shares for a fraction of what the shares would cost.", reveal:"Leverage is what lets a contract give exposure to 100 shares for a fraction of what buying the shares outright would cost. The tradeoff is the deadline attached, since that same efficiency comes with an expiration date." },
+  { cat:"mechanics", term:"Moneyness", short:"Where a strike sits relative to the current price of the stock.", reveal:"Moneyness describes where a strike sits relative to the current stock price, which is what makes a contract in, at, or out of the money. It drives both the cost of the contract and how closely it tracks the stock." },
+  { cat:"mechanics", term:"Weeklies", short:"Contracts that expire every Friday, cheapest and fastest decaying.", reveal:"Weeklies are contracts that expire every Friday. They are the cheapest and the fastest decaying, which means the expected move has to happen almost immediately to pay." },
+  { cat:"mechanics", term:"Monthlies", short:"Contracts expiring the third Friday of the month, with slower decay.", reveal:"Monthlies are the standard contracts, expiring on the third Friday of each month. They carry more time value and decay more slowly than their weekly counterparts." },
+  { cat:"mechanics", term:"Covered Call", short:"Selling a contract against shares already owned to collect premium.", reveal:"A covered call means selling a call against shares already owned in order to collect premium. It is one of the first strategies most brokers approve, because the shares held cover the obligation." },
+  { cat:"mechanics", term:"Cash Secured Put", short:"Selling a put while holding enough cash to buy the shares if assigned.", reveal:"A cash secured put means selling a put while holding enough cash to buy the 100 shares if assigned. Like its covered counterpart, it is generally approved at the lowest permission level because the obligation is fully backed." },
+  { cat:"strategy", term:"Stop-Limit Order", short:"A trigger that becomes a limit order rather than a market order.", reveal:"A stop-limit order uses a trigger price to activate, then places a limit order rather than a market order. It gives more control over the fill, with the risk that a fast move blows straight through the limit and leaves the position open." },
+  { cat:"strategy", term:"Trailing Stop", short:"An exit level that follows a winning position up and locks in gains.", reveal:"A trailing stop is an exit level that moves up behind a winning position, locking in gains as price advances. It never moves down, so it protects what has been made without capping further upside." },
+  { cat:"strategy", term:"Slippage", short:"The gap between the price expected and the price actually filled.", reveal:"Slippage is the difference between the price expected and the price actually received on a fill. It widens on thinly traded names, on wide spreads, and in the first minutes after the open." },
+  { cat:"strategy", term:"Setup", short:"Trend, level, price action, and volume lining up in the same direction.", reveal:"A setup is what exists when trend, level, price action, and volume all line up in the same direction at the same price. Price merely being near a level is not a setup, since the market has not shown anything yet." },
+  { cat:"strategy", term:"Confirmation", short:"Waiting for the market to act at a level before committing to the trade.", reveal:"Confirmation means waiting for the market to actually react at a level before entering, rather than anticipating what it will do. Entering on confirmation trades a slightly worse price for meaningfully better odds." },
+  { cat:"strategy", term:"Averaging Down", short:"Adding to a losing position in order to lower the average cost.", reveal:"Averaging down means adding to a losing position in order to lower the average entry cost. On contracts it usually compounds the problem, since decay continues on the larger position and the stock now has to reverse further and faster." },
+  { cat:"strategy", term:"Revenge Trading", short:"Entering again immediately after a loss in order to recover it.", reveal:"Revenge trading is entering again immediately after a loss in an attempt to win it back. The setup criteria get skipped because of the hurry, and each round tends to be larger than the one before." },
+  { cat:"strategy", term:"Trade Journal", short:"A record of every position taken, the reason for it, and the result.", reveal:"A trade journal is a record of every position taken, the reasoning behind it, the result, and the lesson. Reviewed monthly, it answers which setups actually work for a given person and which mistakes keep repeating." },
+  { cat:"strategy", term:"Win Rate", short:"The percentage of positions that finished profitable.", reveal:"Win rate is the percentage of positions that finished profitable. It matters less than most people assume, because a strong risk to reward ratio can produce a profitable record while being right less than half the time." },
+  { cat:"strategy", term:"Positive Expectancy", short:"When the average gain exceeds the average loss across many trades.", reveal:"Positive expectancy means the average gain exceeds the average loss across many trades. It is what makes a process profitable over time, even at a win rate below fifty percent." },
+  { cat:"strategy", term:"Drawdown", short:"The decline from a peak account value down to its lowest point after.", reveal:"Drawdown is the decline from a peak account value down to its lowest point afterward. Sizing rules exist specifically to keep a bad stretch survivable rather than terminal." },
+  { cat:"strategy", term:"Watchlist", short:"A short set of names followed closely enough to know how they move.", reveal:"A watchlist is a short set of names followed closely enough to know their levels and how they behave. Ten to twenty names known deeply beats sixty tracked shallowly." },
+  { cat:"strategy", term:"Trade Thesis", short:"The stated reason a position was entered, in one sentence.", reveal:"A trade thesis is the stated reason a position was entered, expressed in a single sentence. When that reason is no longer true, the position no longer has a purpose, regardless of what the price is doing." },
+  { cat:"strategy", term:"R Multiple", short:"Expressing gains and losses as a multiple of the amount risked.", reveal:"An R multiple expresses gains and losses as a multiple of the amount risked on the trade. Risking $200 makes 1R equal $200, so a 2R target is a $400 gain." },
+  { cat:"strategy", term:"Scaling Out", short:"Closing a position in pieces as it moves in your favor.", reveal:"Scaling out means closing a position in pieces as it moves in your favor rather than exiting all at once. It locks in part of the gain while leaving something on in case the move continues." },
+  { cat:"strategy", term:"Rolling Up", short:"Closing a contract and reopening at a higher strike to lock in gains.", reveal:"Rolling up means closing a contract and reopening at a higher strike, which takes gains off the table while keeping exposure to a name you still believe in. It is common on long dated positions rather than short term trades." },
+  { cat:"strategy", term:"Catalyst", short:"A specific reason a name should move, rather than a vague expectation.", reveal:"A catalyst is a specific reason a name should move, such as an earnings report, a product launch, or clear sector strength. If there is no answer to why this should move now, the ticker does not belong on the list." },
+  { cat:"strategy", term:"Sector Rotation", short:"Money moving out of one part of the market and into another.", reveal:"Sector rotation is money moving out of one part of the market and into another. Watching which sectors lead tells you as much about conditions as the index level does, and defensive sectors leading is a signal in itself." },
+  { cat:"strategy", term:"Overnight Exposure", short:"The risk carried by holding a position through a market close.", reveal:"Overnight exposure is the risk carried by holding a position through the close, since news can gap the price before you have a chance to act. Day traders avoid it entirely, while swing traders accept it and require a cleaner setup because of it." },
+  { cat:"investing", term:"Exchange", short:"The venue where buy and sell orders actually meet.", reveal:"An exchange is the venue where buy and sell orders meet. The NYSE and the Nasdaq dominate US listings, with the first weighted toward established companies and the second toward technology and growth." },
+  { cat:"investing", term:"Market Maker", short:"A participant standing ready to buy and sell continuously to provide liquidity.", reveal:"A market maker stands ready to buy and sell continuously, which is what makes it possible to hit sell and get filled instantly. You never deal with them directly, but their presence is why a heavily traded name fills at the price you expect." },
+  { cat:"investing", term:"Buying Power", short:"The amount in an account actually available to place trades with.", reveal:"Buying power is the amount in an account actually available to place trades with. Money that has been transferred but has not yet settled does not count toward it, which is why transfers need to start well before the day you intend to trade." },
+  { cat:"investing", term:"Margin", short:"Borrowing against an account in order to trade larger than the cash held.", reveal:"Margin means borrowing against an account in order to trade larger than the cash held. It magnifies losses as well as gains and introduces the possibility of losing more than was deposited, which is why it is generally declined while learning." },
+  { cat:"investing", term:"Fractional Shares", short:"Buying a portion of a share, letting small accounts access expensive stocks.", reveal:"Fractional shares let you buy a portion of a single share rather than a whole one. This is what makes an expensive stock accessible to a small account." },
+  { cat:"investing", term:"Paper Trading", short:"Placing simulated trades with no real money at stake.", reveal:"Paper trading means placing simulated trades with no real money at stake. It is the best way to rehearse the order screen and test a plan, since it captures most of the learning at none of the cost." },
+  { cat:"investing", term:"Fundamental Analysis", short:"Judging a company by its earnings, revenue, debt, and management.", reveal:"Fundamental analysis judges a company by its earnings, revenue, debt, and management in order to answer whether it is valuable. It suits long term investing, where the question is what a business is worth rather than where price goes next." },
+  { cat:"investing", term:"Technical Analysis", short:"Judging likely price direction from price, volume, patterns, and levels.", reveal:"Technical analysis uses price, volume, patterns, and levels to judge where price is likely to go next. It does not ask whether a company is good, only whether buyers or sellers are currently winning and at what price that changes." },
+  { cat:"investing", term:"Settlement", short:"The waiting period before transferred funds or sale proceeds become usable.", reveal:"Settlement is the waiting period before transferred funds or the proceeds of a sale become usable. A standard bank transfer commonly takes three to five business days to settle into buying power." },
+  { cat:"investing", term:"Per-Contract Fee", short:"A charge applied to each contract on the way in and the way out.", reveal:"A per-contract fee is a charge applied to each contract traded, on the way in and again on the way out, commonly between zero and sixty five cents. Stock trades are usually free at major brokers while contracts often are not." },
+  { cat:"investing", term:"Realized vs. Unrealized Gain", short:"The difference between a gain on paper and one that has been locked in.", reveal:"An unrealized gain exists only on paper while the position is still open, and a realized gain is one that has been locked in by closing. Only the second one is actually yours, which is why gains that are not taken frequently give themselves back." },
+  { cat:"investing", term:"VIX", short:"An index measuring the market's expectation of near term volatility.", reveal:"The VIX measures the market's expectation of near term volatility and is often called the fear index. Elevated readings mean wider swings and pricier premium, which is a signal to reduce size rather than press." },
 ];
 
 /* ============== SVG GRAPHICS (hand-rolled, for flagged chart terms) ============== */
@@ -343,6 +400,66 @@ function SvgPullback(){
     </svg>
   );
 }
+function SvgBreakdown(){
+  return (
+    <svg viewBox="0 0 200 120" style={{width:"100%",maxWidth:180,height:"auto"}}>
+      <line x1="15" y1="72" x2="130" y2="72" stroke={GR} strokeWidth="1.5" strokeDasharray="4,3"/>
+      <polyline points="15,42 50,62 85,69 120,71 150,88 185,106" fill="none" stroke={RD} strokeWidth="2.5" strokeLinejoin="round"/>
+      <circle cx="130" cy="72" r="4" fill={RD}/>
+      <text x="130" y="90" textAnchor="middle" fontSize="9" fill={GR} fontFamily="Georgia,serif">breakdown</text>
+    </svg>
+  );
+}
+function SvgDoji(){
+  return (
+    <svg viewBox="0 0 200 120" style={{width:"100%",maxWidth:180,height:"auto"}}>
+      <line x1="100" y1="14" x2="100" y2="106" stroke={GD} strokeWidth="2.5"/>
+      <rect x="78" y="58" width="44" height="4" fill={DK} rx="1"/>
+      <line x1="122" y1="60" x2="160" y2="60" stroke={GD} strokeWidth="1" strokeDasharray="3,3"/>
+      <text x="163" y="63" fontSize="8.5" fill={LBL} fontFamily="Georgia,serif">open = close</text>
+      <text x="100" y="118" textAnchor="middle" fontSize="9" fill={GD} fontFamily="Georgia,serif">indecision</text>
+    </svg>
+  );
+}
+function SvgHammer(){
+  return (
+    <svg viewBox="0 0 200 120" style={{width:"100%",maxWidth:180,height:"auto"}}>
+      <polyline points="12,26 38,44 62,58" fill="none" stroke={LBL} strokeWidth="1.5" strokeDasharray="3,3"/>
+      <line x1="100" y1="26" x2="100" y2="36" stroke={GD} strokeWidth="2.5"/>
+      <rect x="82" y="36" width="36" height="22" fill={GR} rx="2"/>
+      <line x1="100" y1="58" x2="100" y2="108" stroke={GD} strokeWidth="2.5"/>
+      <text x="126" y="88" fontSize="8.5" fill={GR} fontFamily="Georgia,serif">buyers</text>
+      <text x="126" y="99" fontSize="8.5" fill={GR} fontFamily="Georgia,serif">stepped in</text>
+      <text x="34" y="20" fontSize="8.5" fill={LBL} fontFamily="Georgia,serif">after a decline</text>
+    </svg>
+  );
+}
+function SvgShootingStar(){
+  return (
+    <svg viewBox="0 0 200 120" style={{width:"100%",maxWidth:180,height:"auto"}}>
+      <polyline points="12,96 38,78 62,62" fill="none" stroke={LBL} strokeWidth="1.5" strokeDasharray="3,3"/>
+      <line x1="100" y1="12" x2="100" y2="62" stroke={GD} strokeWidth="2.5"/>
+      <rect x="82" y="62" width="36" height="22" fill={RD} rx="2"/>
+      <line x1="100" y1="84" x2="100" y2="94" stroke={GD} strokeWidth="2.5"/>
+      <text x="126" y="30" fontSize="8.5" fill={RD} fontFamily="Georgia,serif">sellers</text>
+      <text x="126" y="41" fontSize="8.5" fill={RD} fontFamily="Georgia,serif">rejected it</text>
+      <text x="30" y="112" fontSize="8.5" fill={LBL} fontFamily="Georgia,serif">after an advance</text>
+    </svg>
+  );
+}
+function SvgEngulfing(){
+  return (
+    <svg viewBox="0 0 200 120" style={{width:"100%",maxWidth:180,height:"auto"}}>
+      <line x1="66" y1="42" x2="66" y2="80" stroke={GD} strokeWidth="2"/>
+      <rect x="52" y="50" width="28" height="22" fill={RD} rx="2"/>
+      <line x1="128" y1="24" x2="128" y2="96" stroke={GD} strokeWidth="2.5"/>
+      <rect x="108" y="34" width="40" height="54" fill={GR} rx="2"/>
+      <rect x="106" y="32" width="44" height="58" fill="none" stroke={GR} strokeWidth="1" strokeDasharray="3,2" rx="3"/>
+      <text x="66" y="98" textAnchor="middle" fontSize="8.5" fill={LBL} fontFamily="Georgia,serif">prior</text>
+      <text x="128" y="110" textAnchor="middle" fontSize="9" fill={GR} fontFamily="Georgia,serif">engulfs it</text>
+    </svg>
+  );
+}
 function SvgBreakout(){
   return (
     <svg viewBox="0 0 200 120" style={{width:"100%",maxWidth:180,height:"auto"}}>
@@ -420,7 +537,7 @@ function SvgShortPosition(){
     </svg>
   );
 }
-const SVG_MAP = { candle:SvgCandle, wick:SvgWick, support:SvgSupport, resistance:SvgResistance, trendline:SvgTrendline, ma:SvgMA, body:SvgBody, gap:SvgGap, consolidation:SvgConsolidation, pullback:SvgPullback, breakout:SvgBreakout, uptrend:SvgUptrend, downtrend:SvgDowntrend, ohlc:SvgOHLC, reversal:SvgReversal, longpos:SvgLongPosition, shortpos:SvgShortPosition, ranging:SvgRanging };
+const SVG_MAP = { candle:SvgCandle, wick:SvgWick, support:SvgSupport, resistance:SvgResistance, trendline:SvgTrendline, ma:SvgMA, body:SvgBody, gap:SvgGap, consolidation:SvgConsolidation, pullback:SvgPullback, breakout:SvgBreakout, uptrend:SvgUptrend, downtrend:SvgDowntrend, ohlc:SvgOHLC, reversal:SvgReversal, longpos:SvgLongPosition, shortpos:SvgShortPosition, ranging:SvgRanging, breakdown:SvgBreakdown, doji:SvgDoji, hammer:SvgHammer, shootingstar:SvgShootingStar, engulfing:SvgEngulfing };
 
 /* ============== HELPERS ============== */
 function shuffle(arr){
@@ -472,7 +589,7 @@ function CategoryScreen({ onPick }){
       <h1 style={{margin:"0 0 0.4rem",fontFamily:"Georgia,serif",fontSize:"clamp(1.8rem,5vw,2.6rem)",color:DK,letterSpacing:"-0.03em",lineHeight:1.15}}>Test Your Knowledge</h1>
       <p style={{margin:"0 0 2rem",color:LBL,fontSize:"0.95rem"}}>Pick a category and flip through flashcards to check what's sticking.</p>
 
-      <button className="cat-card cat-card-all" onClick={function(){ onPick("all"); }} style={{marginBottom:"0.9rem"}}>
+      <button className="cat-card cat-card-all" onClick={function(){ onPick("all"); }} style={{marginBottom:"0.7rem"}}>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
           <div>
             <div style={{fontSize:"0.62rem",fontWeight:"700",letterSpacing:"0.15em",textTransform:"uppercase",color:"#9a7a55",marginBottom:"6px"}}>Comprehensive</div>
@@ -480,6 +597,17 @@ function CategoryScreen({ onPick }){
             <div style={{fontSize:"0.78rem",color:"#d4a87a",marginTop:"4px"}}>{TERMS.length} terms across all categories</div>
           </div>
           <span style={{fontSize:"1.4rem",color:"#d4a87a"}}>→</span>
+        </div>
+      </button>
+
+      <button className="cat-card cat-card-random" onClick={function(){ onPick("random30"); }} style={{marginBottom:"1.4rem"}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+          <div>
+            <div style={{fontSize:"0.62rem",fontWeight:"700",letterSpacing:"0.15em",textTransform:"uppercase",color:"rgba(255,255,255,0.88)",marginBottom:"6px"}}>Quick Session</div>
+            <div style={{fontFamily:"Georgia,serif",fontSize:"1.3rem",fontWeight:"700"}}>30 Random Terms</div>
+            <div style={{fontSize:"0.78rem",color:"rgba(255,255,255,0.94)",marginTop:"4px"}}>A different mix every time you start</div>
+          </div>
+          <span style={{fontSize:"1.4rem",color:"#fff"}}>→</span>
         </div>
       </button>
 
@@ -583,45 +711,93 @@ function FlashCard({ card, pool, onAnswered }){
   );
 }
 
+function labelFor(catId){
+  if (catId === "all") return "Review Everything";
+  if (catId === "random30") return "30 Random Terms";
+  return CATEGORIES.filter(function(c){ return c.id===catId; })[0].label;
+}
+
+/* Deck is built fresh at the moment the session starts. Nothing is pre-generated
+   and nothing is stored, so every random session draws a different 30. */
+function buildDeck(catId){
+  if (catId === "random30") return shuffle(TERMS).slice(0, 30);
+  if (catId === "all") return shuffle(TERMS);
+  return shuffle(TERMS.filter(function(t){ return t.cat===catId; }));
+}
+
+/* Wrong answers are drawn from this pool. Category sessions pull from within the
+   category so the options stay plausible. Mixed sessions pull from everything. */
+function distractorPool(catId){
+  if (catId === "all" || catId === "random30") return TERMS;
+  return TERMS.filter(function(t){ return t.cat===catId; });
+}
+
+function ScoreChip({ icon, value, color, bg }){
+  return (
+    <span style={{display:"inline-flex",alignItems:"center",gap:"4px",background:bg,color:color,
+      borderRadius:"999px",padding:"3px 10px",fontSize:"0.72rem",fontWeight:"700",letterSpacing:"0.03em"}}>
+      <span style={{fontSize:"0.7rem"}}>{icon}</span>{value}
+    </span>
+  );
+}
+
 function SessionScreen({ catId, onFinish, onExit }){
-  var label = catId === "all" ? "Review Everything" : CATEGORIES.filter(function(c){ return c.id===catId; })[0].label;
-  var pool = catId === "all" ? TERMS : TERMS.filter(function(t){ return t.cat===catId; });
-  var [deck] = useState(function(){ return shuffle(pool); });
+  var label = labelFor(catId);
+  var pool = distractorPool(catId);
+  var [deck] = useState(function(){ return buildDeck(catId); });
   var [idx, setIdx] = useState(0);
   var [score, setScore] = useState(0);
+  var [done, setDone] = useState(0);
   var [answered, setAnswered] = useState(false);
 
   function handleAnswered(correct){
     if (correct) setScore(function(s){ return s+1; });
+    setDone(function(d){ return d+1; });
     setAnswered(true);
   }
 
   function next(){
     if (idx + 1 >= deck.length){
-      onFinish(score, deck.length);
+      onFinish(score, done, deck.length);
     } else {
       setIdx(idx+1);
       setAnswered(false);
     }
   }
 
-  var pct = ((idx) / deck.length) * 100;
+  function endEarly(){
+    onFinish(score, done, deck.length);
+  }
+
+  var pct = (idx / deck.length) * 100;
+  var wrong = done - score;
 
   return (
     <div className="fu" style={{maxWidth:560,margin:"0 auto",padding:"2rem 1rem"}}>
-      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"0.6rem"}}>
-        <button onClick={onExit} style={{background:"none",border:"none",color:LBL,fontSize:"0.78rem",cursor:"pointer",letterSpacing:"0.05em"}}>← Categories</button>
-        <span style={{fontSize:"0.75rem",color:LBL,letterSpacing:"0.05em"}}>{label} · {idx+1} / {deck.length}</span>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"0.6rem",gap:"0.5rem"}}>
+        <button onClick={onExit} style={{background:"none",border:"none",color:LBL,fontSize:"0.78rem",cursor:"pointer",letterSpacing:"0.05em",padding:0,fontFamily:"inherit"}}>← Categories</button>
+        <div style={{display:"flex",gap:"5px"}}>
+          <ScoreChip icon="✓" value={score} color={GR} bg="#e8faf3"/>
+          <ScoreChip icon="✕" value={wrong} color={RD} bg="#fdeee9"/>
+        </div>
       </div>
-      <div style={{height:3,background:"#e4d8c8",borderRadius:2,marginBottom:"1.5rem"}}>
+
+      <div style={{height:3,background:"#e4d8c8",borderRadius:2,marginBottom:"0.5rem"}}>
         <div style={{height:"100%",width:pct+"%",background:OR,borderRadius:2,transition:"width 0.3s"}}/>
+      </div>
+
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"1.3rem",gap:"0.5rem"}}>
+        <span style={{fontSize:"0.75rem",color:LBL,letterSpacing:"0.05em"}}>{label} · {idx+1} / {deck.length}</span>
+        {done > 0 && (
+          <button onClick={endEarly} style={{background:"none",border:"none",color:LBL,fontSize:"0.72rem",cursor:"pointer",letterSpacing:"0.05em",textDecoration:"underline",padding:0,fontFamily:"inherit"}}>End session</button>
+        )}
       </div>
 
       <FlashCard key={idx} card={deck[idx]} pool={pool} onAnswered={handleAnswered}/>
 
       {answered && (
         <div className="fu" style={{display:"flex",justifyContent:"center",marginTop:"1.2rem"}}>
-          <button onClick={next} style={{background:OR,border:"none",borderRadius:"999px",padding:"10px 28px",color:"#fff",fontWeight:"700",fontSize:"0.82rem",letterSpacing:"0.06em",cursor:"pointer"}}>
+          <button onClick={next} style={{background:OR,border:"none",borderRadius:"999px",padding:"10px 28px",color:"#fff",fontWeight:"700",fontSize:"0.82rem",letterSpacing:"0.06em",cursor:"pointer",fontFamily:"inherit"}}>
             {idx+1 >= deck.length ? "See Results" : "Next Card"} →
           </button>
         </div>
@@ -630,27 +806,45 @@ function SessionScreen({ catId, onFinish, onExit }){
   );
 }
 
-function SummaryScreen({ catId, score, total, onRetry, onBack }){
-  var label = catId === "all" ? "Review Everything" : CATEGORIES.filter(function(c){ return c.id===catId; })[0].label;
-  var pct = Math.round((score/total)*100);
+function SummaryScreen({ catId, score, answered, total, onRetry, onBack }){
+  var label = labelFor(catId);
+  var partial = answered < total;
+  var pct = answered > 0 ? Math.round((score/answered)*100) : 0;
   var color = pct >= 80 ? GR : pct >= 50 ? OR : RD;
+  var wrong = answered - score;
+  var retryLabel = catId === "random30" ? "New 30 Terms" : catId === "all" ? "Start Over" : "Retry This Category";
 
   return (
     <div className="fu" style={{maxWidth:560,margin:"0 auto",padding:"2rem 1rem",textAlign:"center"}}>
       <div style={{fontSize:"0.7rem",letterSpacing:"0.15em",textTransform:"uppercase",color:LBL,marginBottom:"0.5rem"}}>{label}</div>
-      <h1 style={{fontFamily:"Georgia,serif",fontSize:"clamp(1.6rem,5vw,2.2rem)",color:DK,marginBottom:"1.5rem"}}>Session Complete</h1>
+      <h1 style={{fontFamily:"Georgia,serif",fontSize:"clamp(1.6rem,5vw,2.2rem)",color:DK,marginBottom:"1.5rem"}}>{partial ? "Session Ended" : "Session Complete"}</h1>
 
       <div style={{background:"linear-gradient(130deg,#1a1108,#2c1d0e)",borderRadius:"14px",padding:"1.8rem 2rem",marginBottom:"1.5rem"}}>
         <div style={{fontSize:"0.7rem",letterSpacing:"0.15em",textTransform:"uppercase",color:"#9a7a55",marginBottom:"0.4rem"}}>Score</div>
-        <div style={{fontFamily:"Georgia,serif",fontSize:"2.4rem",color:color,fontWeight:"700"}}>{score} / {total}</div>
+        <div style={{fontFamily:"Georgia,serif",fontSize:"2.4rem",color:color,fontWeight:"700"}}>{score} / {answered}</div>
         <div style={{fontSize:"0.85rem",color:"#d4a87a",marginTop:"0.3rem"}}>{pct}% correct</div>
+        <div style={{display:"flex",justifyContent:"center",gap:"1.4rem",marginTop:"1.1rem",paddingTop:"1rem",borderTop:"1px solid rgba(255,255,255,0.09)"}}>
+          <div>
+            <div style={{fontFamily:"Georgia,serif",fontSize:"1.2rem",color:"#6ee7b7",fontWeight:"700"}}>{score}</div>
+            <div style={{fontSize:"0.62rem",letterSpacing:"0.12em",textTransform:"uppercase",color:"#9a7a55",marginTop:"2px"}}>Correct</div>
+          </div>
+          <div>
+            <div style={{fontFamily:"Georgia,serif",fontSize:"1.2rem",color:"#f87171",fontWeight:"700"}}>{wrong}</div>
+            <div style={{fontSize:"0.62rem",letterSpacing:"0.12em",textTransform:"uppercase",color:"#9a7a55",marginTop:"2px"}}>Incorrect</div>
+          </div>
+        </div>
+        {partial && (
+          <div style={{fontSize:"0.72rem",color:"#9a7a55",marginTop:"1rem",lineHeight:"1.55"}}>
+            You stopped after {answered} of {total} cards. Your score covers only the ones you answered.
+          </div>
+        )}
       </div>
 
       <div style={{display:"flex",gap:"0.75rem",justifyContent:"center",flexWrap:"wrap"}}>
-        <button onClick={onRetry} style={{background:OR,border:"none",borderRadius:"999px",padding:"10px 24px",color:"#fff",fontWeight:"700",fontSize:"0.82rem",letterSpacing:"0.05em",cursor:"pointer"}}>
-          Retry This Category
+        <button onClick={onRetry} style={{background:OR,border:"none",borderRadius:"999px",padding:"10px 24px",color:"#fff",fontWeight:"700",fontSize:"0.82rem",letterSpacing:"0.05em",cursor:"pointer",fontFamily:"inherit"}}>
+          {retryLabel}
         </button>
-        <button onClick={onBack} style={{background:"#fffcf7",border:"1.5px solid "+BD,borderRadius:"999px",padding:"10px 24px",color:DK,fontWeight:"700",fontSize:"0.82rem",letterSpacing:"0.05em",cursor:"pointer"}}>
+        <button onClick={onBack} style={{background:"#fffcf7",border:"1.5px solid "+BD,borderRadius:"999px",padding:"10px 24px",color:DK,fontWeight:"700",fontSize:"0.82rem",letterSpacing:"0.05em",cursor:"pointer",fontFamily:"inherit"}}>
           Back to Categories
         </button>
       </div>
@@ -661,17 +855,20 @@ function SummaryScreen({ catId, score, total, onRetry, onBack }){
 function App(){
   var [view, setView] = useState("categories");
   var [catId, setCatId] = useState(null);
-  var [result, setResult] = useState({ score:0, total:0 });
+  var [result, setResult] = useState({ score:0, answered:0, total:0 });
+  var [runId, setRunId] = useState(0);
 
   function handlePick(id){
     setCatId(id);
+    setRunId(function(r){ return r+1; });
     setView("session");
   }
-  function handleFinish(score, total){
-    setResult({ score:score, total:total });
+  function handleFinish(score, answered, total){
+    setResult({ score:score, answered:answered, total:total });
     setView("summary");
   }
   function handleRetry(){
+    setRunId(function(r){ return r+1; });
     setView("session");
   }
   function handleBack(){
@@ -683,8 +880,8 @@ function App(){
     <div>
       <Topbar/>
       {view === "categories" && <CategoryScreen onPick={handlePick}/>}
-      {view === "session" && <SessionScreen key={catId+"-"+Date.now()} catId={catId} onFinish={handleFinish} onExit={handleBack}/>}
-      {view === "summary" && <SummaryScreen catId={catId} score={result.score} total={result.total} onRetry={handleRetry} onBack={handleBack}/>}
+      {view === "session" && <SessionScreen key={catId+"-"+runId} catId={catId} onFinish={handleFinish} onExit={handleBack}/>}
+      {view === "summary" && <SummaryScreen catId={catId} score={result.score} answered={result.answered} total={result.total} onRetry={handleRetry} onBack={handleBack}/>}
       <Footer/>
     </div>
   );
