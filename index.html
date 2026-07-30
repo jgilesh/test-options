@@ -87,6 +87,7 @@ const DK = "#1a1108", CA = "#fffcf7", BD = "#e8ddd0", LBL = "#8a7560", MUT = "#b
 const CATEGORIES = [
   { id: "technical", label: "Technical Analysis", color: OR, icon: "📈" },
   { id: "mechanics", label: "Options Mechanics", color: PU, icon: "📜" },
+  { id: "patterns", label: "Chart Patterns", color: PU, icon: "📐" },
   { id: "greeks", label: "The Greeks", color: GD, icon: "Δ" },
   { id: "chain", label: "The Options Chain", color: "#2A7ED4", icon: "🔗" },
   { id: "strategy", label: "Strategy & Setup", color: GR, icon: "🎯" },
@@ -105,7 +106,7 @@ const TERMS = [
   { cat:"technical", term:"Indicator", short:"A calculation based on price and volume that helps interpret what a chart shows.", reveal:"An indicator is a calculation based on price and volume that helps traders interpret what a chart is showing. RSI and MACD are both examples of indicators traders layer on top of a price chart." },
   { cat:"technical", term:"RSI (Relative Strength Index)", short:"Measures how fast and far price has moved recently, on a 0 to 100 scale.", reveal:"RSI is an indicator that measures how fast and how far price has moved recently, on a scale from 0 to 100. Readings above 70 suggest a stock may be overbought, while readings below 30 suggest it may be oversold.", svg:"rsi" },
   { cat:"technical", term:"MACD", short:"Compares two moving averages to show momentum and potential trend changes.", reveal:"MACD is an indicator that compares two moving averages to show momentum and potential trend changes. When the faster line crosses above the slower one, it can signal upward momentum building.", svg:"macd" },
-  { cat:"technical", term:"Chart Pattern", short:"A recognizable shape formed by price movement that traders use to anticipate moves.", reveal:"A chart pattern is a recognizable shape formed by price movement over time, like a triangle or a head and shoulders. Traders use these patterns to anticipate what price might do next based on how it has behaved before.", svg:"chartpattern" },
+  { cat:"patterns", term:"Chart Pattern", short:"A recognizable shape formed by price movement that traders use to anticipate moves.", reveal:"A chart pattern is a recognizable shape formed by price movement over time, like a triangle or a head and shoulders. Traders use these patterns to anticipate what price might do next based on how it has behaved before.", svg:"chartpattern" },
   { cat:"technical", term:"Timeframe", short:"The length of time each candle or bar on a chart represents.", reveal:"Timeframe refers to the length of time each candle or bar on a chart represents, such as 1 minute, 1 hour, or 1 day. Shorter timeframes show more detail and noise, while longer timeframes show the bigger picture.", svg:"timeframe" },
   { cat:"technical", term:"Breakout", short:"When price moves decisively above a resistance level.", reveal:"A breakout happens when price pushes decisively above a resistance level, which can signal the start of a stronger move higher. The old ceiling frequently becomes the new floor afterward.", svg:"breakout" },
   { cat:"technical", term:"Pullback", short:"A short-term move against the trend before price continues in its original direction.", reveal:"A pullback is a short-term move against the overall trend before price continues moving in its original direction. It's different from a reversal, which is a true change in the trend's direction, not just a pause.", svg:"pullback" },
@@ -279,6 +280,37 @@ const TERMS = [
   { cat:"investing", term:"Per-Contract Fee", short:"A charge applied to each contract on the way in and the way out.", reveal:"A per-contract fee is a charge applied to each contract traded, on the way in and again on the way out, commonly between zero and sixty five cents. Stock trades are usually free at major brokers while contracts often are not." },
   { cat:"investing", term:"Realized vs. Unrealized Gain", short:"The difference between a gain on paper and one that has been locked in.", reveal:"An unrealized gain exists only on paper while the position is still open, and a realized gain is one that has been locked in by closing. Only the second one is actually yours, which is why gains that are not taken frequently give themselves back.", svg:"realizedunrealized" },
   { cat:"investing", term:"VIX", short:"An index measuring the market's expectation of near term volatility.", reveal:"The VIX measures the market's expectation of near term volatility and is often called the fear index. Elevated readings mean wider swings and pricier premium, which is a signal to reduce size rather than press.", svg:"vixgraphic" },
+  { cat:"patterns", term:"Head & Shoulders", short:"Three peaks with the middle one highest, ending an uptrend.", reveal:"A head and shoulders is three peaks with the middle one highest, and the two dips between them connected by a neckline. The failure to make a new high on the third peak is the first warning, and the pattern only completes when price closes below the neckline.", svg:"headshoulders" },
+  { cat:"patterns", term:"Inverse Head & Shoulders", short:"Three dips with the middle one deepest, ending a downtrend.", reveal:"An inverse head and shoulders is three dips with the middle one deepest, sitting under a neckline that connects the two bounces. It marks sellers running out, and it confirms only when price closes above the neckline.", svg:"invheadshoulders" },
+  { cat:"patterns", term:"Double Top", short:"The same ceiling rejected twice, forming an M shape.", reveal:"A double top forms when price hits the same resistance zone twice and gets rejected both times, tracing an M. Two failures at one ceiling show buyers could not absorb the selling, and the reversal confirms when the dip between the two peaks breaks.", svg:"doubletop" },
+  { cat:"patterns", term:"Double Bottom", short:"The same floor held twice, forming a W shape.", reveal:"A double bottom forms when price reaches the same support zone twice and bounces both times, tracing a W. The reversal confirms when price closes above the bounce that sits between the two lows.", svg:"doublebottom" },
+  { cat:"patterns", term:"Rising Wedge", short:"Two rising lines squeezing together, usually resolving downward.", reveal:"A rising wedge has price making higher highs and higher lows inside two converging lines, with each push gaining less ground than the last. The narrowing range means momentum is fading even while price rises, which is why these most often resolve to the downside.", svg:"risingwedge" },
+  { cat:"patterns", term:"Falling Wedge", short:"Two falling lines squeezing together, usually resolving upward.", reveal:"A falling wedge has lower highs and lower lows inside two converging lines, with each drop making less progress than the one before. Selling pressure is fading even as price falls, which is why these most often resolve upward.", svg:"fallingwedge" },
+  { cat:"patterns", term:"Cup & Handle", short:"A rounded recovery followed by a shallow pause before continuing.", reveal:"A cup and handle is a rounded dip and recovery back to the old high, followed by a small shallow pullback before price pushes through. The gradual U shape shows steady accumulation rather than a panicky bounce, and the entry is a close above the rim.", svg:"cuphandle" },
+  { cat:"patterns", term:"Ascending Triangle", short:"Higher lows rising into a flat ceiling.", reveal:"An ascending triangle has a flat resistance line on top with higher lows rising into it from below, meaning buyers step in earlier on each pullback. Pressure builds against a fixed ceiling, and the flat line gives a clean trigger.", svg:"asctriangle" },
+  { cat:"patterns", term:"Descending Triangle", short:"Lower highs pressing down into a flat floor.", reveal:"A descending triangle has a flat support line underneath with lower highs pressing down into it, meaning sellers get more aggressive on each bounce. Pressure builds against a fixed floor, and these usually resolve downward.", svg:"desctriangle" },
+  { cat:"patterns", term:"Bull Flag", short:"A sharp move up, a small drifting pause, then more upside.", reveal:"A bull flag is a sharp near vertical move up followed by a small downward drifting channel while the move catches its breath. The shallow pullback shows holders are waiting rather than selling, and the trigger is a close above the channel.", svg:"bullflag" },
+  { cat:"patterns", term:"Bear Flag", short:"A sharp drop, a weak drifting bounce, then more downside.", reveal:"A bear flag is a steep drop followed by a small upward drifting channel as sellers pause. The weak bounce shows buyers are not committed, and a close below the channel usually continues the drop.", svg:"bearflag" },
+  { cat:"patterns", term:"Neckline", short:"The line a pattern has to close through before it counts.", reveal:"A neckline is the trigger level on a pattern, drawn through the dips of a head and shoulders or the bounces of its inverse. Nothing is confirmed until price closes through it, ideally on rising volume, so a forming pattern is a watchlist item rather than a trade.", svg:"neckline" },
+  { cat:"patterns", term:"Reversal Pattern", short:"A shape that forms when a trend is running out and turning.", reveal:"A reversal pattern forms when a trend is running out of participants and about to change direction. Head and shoulders, double tops and bottoms, and wedges all fall into this group.", svg:"reversalpattern" },
+  { cat:"patterns", term:"Continuation Pattern", short:"A shape that forms when a trend pauses before resuming.", reveal:"A continuation pattern forms while a trend takes a breather rather than ending. Flags, triangles, and the cup and handle all fall into this group, and they typically resolve in the direction the move was already going.", svg:"continuationpattern" },
+  { cat:"technical", term:"Confluence", short:"Several signals pointing the same direction at the same time.", reveal:"Confluence is what exists when several independent signals point the same way at once, such as a level, volume, an indicator, and a higher timeframe all agreeing. One signal on its own is a clue rather than a green light, and the more that agree, the more weight the read carries.", svg:"confluence" },
+  { cat:"technical", term:"Timeframe Alignment", short:"Checking whether the same signal holds on more than one chart.", reveal:"Timeframe alignment means checking whether a signal shows up on both a higher timeframe and the shorter one used for timing. When they agree the case is stronger, and when they conflict that disagreement is useful information in itself.", svg:"timeframealign" },
+  { cat:"technical", term:"Divergence", short:"Price and momentum moving in opposite directions.", reveal:"Divergence happens when price makes a new high but the momentum reading fails to, or the reverse on the downside. It is often the earliest warning that a move is losing strength, and many traders treat it as more reliable than the standard overbought and oversold thresholds.", svg:"divergence" },
+  { cat:"technical", term:"Buy/Sell Volume", short:"A volume bar split into the buyer and seller share.", reveal:"Buy and sell volume splits the regular volume bar into how much was buyer driven versus seller driven. Plain volume only says how much traded, while the split says who was more aggressive, which explains why a candle can barely move on heavy trading when the two sides are close to even.", svg:"buysellvolume" },
+  { cat:"technical", term:"Crossover", short:"One line passing through another, marking a shift in momentum.", reveal:"A crossover is the moment a faster line passes through a slower one, which is the headline signal on MACD and on moving average pairs. It marks momentum shifting rather than predicting it, so it works as confirmation for something already visible on the chart.", svg:"crossover" },
+  { cat:"technical", term:"Histogram", short:"Bars above and below a zero line showing momentum building or fading.", reveal:"A histogram plots bars above and below a zero line to show the gap between two lines widening or narrowing. Growing bars mean momentum is expanding and shrinking bars mean it is fading, though it is secondary to the crossover itself.", svg:"histogram" },
+  { cat:"technical", term:"Dynamic Support and Resistance", short:"A level that moves with price instead of sitting at one number.", reveal:"Dynamic support and resistance is a level that moves along with price rather than sitting at a fixed number, which is how moving averages and VWAP behave. In an uptrend price often pulls back to the line and bounces, and in a downtrend it rallies to the line and gets rejected.", svg:"dynamicsr" },
+  { cat:"technical", term:"Lagging Indicator", short:"A tool built from price that has already happened.", reveal:"A lagging indicator is built from price that already occurred, which is true of moving averages, MACD, and momentum readings. That is why they confirm a setup already spotted on the chart rather than serving as a standalone reason to enter.", svg:"lagging" },
+  { cat:"technical", term:"Fibonacci Retracement", short:"Horizontal levels marking how far a pullback might go.", reveal:"Fibonacci retracement draws horizontal levels between a swing low and a swing high, most commonly at 38.2, 50, and 61.8 percent. After a strong move price rarely runs forever without pulling back, and these levels give a way to anticipate roughly where that pullback might end. On its own a level is a possibility, and it becomes a high conviction zone when something else sits at the same price.", svg:"fibonacci" },
+  { cat:"technical", term:"The Flip", short:"A broken level swapping roles from ceiling to floor or back.", reveal:"The flip is what happens when a broken level takes on the opposite role, so old resistance starts acting as support and old support starts acting as resistance. The traders watching that level are still watching it from the other side, which is why the retest after a break is often the cleanest confirmation.", svg:"theflip" },
+  { cat:"technical", term:"Key Level", short:"A price zone the market has repeatedly paused or reversed at.", reveal:"A key level is a price zone where the market has repeatedly paused, reversed, or broken through. It is a zone rather than an exact price, since price rarely respects a line to the penny, and the more times it gets tested and holds, the more weight it carries.", svg:"keylevel" },
+  { cat:"technical", term:"Spinning Top", short:"A small body with wicks of similar length on both sides.", reveal:"A spinning top has a small body with wicks of roughly equal length above and below. Both sides pushed hard during the period but neither controlled the close, which makes it a signal of indecision worth watching rather than acting on.", svg:"spinningtop" },
+  { cat:"technical", term:"Marubozu", short:"A candle with almost no wicks, body spanning the full range.", reveal:"A marubozu is a candle with almost no wicks, its body spanning nearly the entire high to low range. It is the opposite of indecision, showing one side in complete control for the whole period with no real pushback.", svg:"marubozu" },
+  { cat:"technical", term:"Line Chart", short:"Closing prices joined together in a single line.", reveal:"A line chart connects each period's closing price with a single line. It is clean for seeing a broad trend but leaves out the open, the high, and the low entirely, which is why it carries too little information to trade from.", svg:"linechart" },
+  { cat:"technical", term:"Bar Chart (OHLC)", short:"The same four prices shown as a line with side ticks.", reveal:"A bar chart shows a vertical line for the high to low range with a tick on the left for the open and a tick on the right for the close. It carries the same information as a candle but is slower to read at a glance.", svg:"barchart" },
+  { cat:"technical", term:"Candle Close", short:"The point at which a candle becomes final and readable.", reveal:"A candle is not final until its period ends, and while it is still forming it can flip from green to red or the reverse. Reading one still in progress is reading a sentence before it finishes, which is why entries wait for the close.", svg:"candleclose" },
+  { cat:"technical", term:"Bullish vs. Bearish Candle", short:"Which side won the period, shown by where it closed.", reveal:"A bullish candle closes above where it opened, meaning buyers controlled the period, and a bearish candle closes below its open, meaning sellers did. Reading a run of them in sequence shows who has been winning recently.", svg:"bullbearcandle" },
 ];
 
 /* ============== SVG GRAPHICS (hand-rolled, for flagged chart terms) ============== */
@@ -2099,7 +2131,417 @@ function Svg_vixgraphic(){
     </svg>
   );
 }
-const SVG_MAP = { candle:SvgCandle, wick:SvgWick, support:SvgSupport, resistance:SvgResistance, trendline:SvgTrendline, ma:SvgMA, body:SvgBody, gap:SvgGap, consolidation:SvgConsolidation, pullback:SvgPullback, breakout:SvgBreakout, uptrend:SvgUptrend, downtrend:SvgDowntrend, ohlc:SvgOHLC, reversal:SvgReversal, longpos:SvgLongPosition, shortpos:SvgShortPosition, ranging:SvgRanging, breakdown:SvgBreakdown, doji:SvgDoji, hammer:SvgHammer, shootingstar:SvgShootingStar, engulfing:SvgEngulfing, volumebars:Svg_volumebars, relvolume:Svg_relvolume, rsi:Svg_rsi, overbought:Svg_overbought, macd:Svg_macd, sma:Svg_sma, ema:Svg_ema, goldencross:Svg_goldencross, deathcross:Svg_deathcross, vwap:Svg_vwap, psychlevel:Svg_psychlevel, falsebreakout:Svg_falsebreakout, swinghl:Svg_swinghl, timeframe:Svg_timeframe, chartpattern:Svg_chartpattern, delta:Svg_delta, gamma:Svg_gamma, decay:Svg_decay, vega:Svg_vega, iv:Svg_iv, ivrank:Svg_ivrank, ivpercentile:Svg_ivpercentile, deltaneutral:Svg_deltaneutral, volcrush:Svg_volcrush, chainbid:Svg_chainbid, chainask:Svg_chainask, chainstrike:Svg_chainstrike, chainoi:Svg_chainoi, chainvol:Svg_chainvol, chainlayout:Svg_chainlayout, chainspread:Svg_chainspread, chainmark:Svg_chainmark, chainlast:Svg_chainlast, chainchange:Svg_chainchange, chainliquidity:Svg_chainliquidity, expcycle:Svg_expcycle, nearfar:Svg_nearfar, weeklymonthly:Svg_weeklymonthly, itm:Svg_itm, atm:Svg_atm, otm:Svg_otm, moneyness:Svg_moneyness, strikeprice:Svg_strikeprice, strikeintervals:Svg_strikeintervals, contract100:Svg_contract100, premium:Svg_premium, intrinsic:Svg_intrinsic, extrinsic:Svg_extrinsic, expiredate:Svg_expiredate, expiresworthless:Svg_expiresworthless, payoffcall:Svg_payoffcall, payoffput:Svg_payoffput, payoffbe:Svg_payoffbe, payoffcc:Svg_payoffcc, payoffcsp:Svg_payoffcsp, leverage:Svg_leverage, tradingcontract:Svg_tradingcontract, exercising:Svg_exercising, ordermarket:Svg_ordermarket, orderlimit:Svg_orderlimit, orderstoplimit:Svg_orderstoplimit, stoploss:Svg_stoploss, trailingstop:Svg_trailingstop, slippage:Svg_slippage, holdscalp:Svg_holdscalp, holdday:Svg_holdday, holdswing:Svg_holdswing, holdleap:Svg_holdleap, positionsize:Svg_positionsize, riskreward:Svg_riskreward, entrypoint:Svg_entrypoint, exitpoint:Svg_exitpoint, profittarget:Svg_profittarget, rangetrading:Svg_rangetrading, momentum:Svg_momentum, setupgraphic:Svg_setupgraphic, confirmation:Svg_confirmation, averagingdown:Svg_averagingdown, winrate:Svg_winrate, expectancy:Svg_expectancy, drawdown:Svg_drawdown, rmultiple:Svg_rmultiple, scalingout:Svg_scalingout, rollingup:Svg_rollingup, sectorrotation:Svg_sectorrotation, overnightexp:Svg_overnightexp, bullmarket:Svg_bullmarket, bearmarket:Svg_bearmarket, diversification:Svg_diversification, allocation:Svg_allocation, compounding:Svg_compounding, dca:Svg_dca, averagedown:Svg_averagedown, marketcap:Svg_marketcap, etf:Svg_etf, indexgraphic:Svg_indexgraphic, dividend:Svg_dividend, divyield:Svg_divyield, peratio:Svg_peratio, valuation:Svg_valuation, stocksplit:Svg_stocksplit, ipo:Svg_ipo, riskreturn:Svg_riskreturn, investorstraders:Svg_investorstraders, volatilitygen:Svg_volatilitygen, liquiditygen:Svg_liquiditygen, exchangegraphic:Svg_exchangegraphic, marketmaker:Svg_marketmaker, margin:Svg_margin, fractional:Svg_fractional, fundamental:Svg_fundamental, technicalanalysis:Svg_technicalanalysis, realizedunrealized:Svg_realizedunrealized, vixgraphic:Svg_vixgraphic };
+function Svg_headshoulders(){
+  return (
+    <svg viewBox="0 0 200 120" style={{width:"100%",maxWidth:180,height:"auto"}}>
+      <polyline points="12,88 40,50 60,72 88,26 116,72 144,52 176,96" fill="none" stroke={DK} strokeWidth="2.4" strokeLinejoin="round"/>
+      <line x1="8" y1="74" x2="192" y2="74" stroke={RD} strokeWidth="1.6" strokeDasharray="4,3"/>
+      <text x="10" y="88" fontSize="7.5" fill={RD} fontFamily="Georgia,serif">neckline</text>
+      <circle cx="40" cy="50" r="3.5" fill={GD}/><circle cx="88" cy="26" r="4.5" fill={GD}/><circle cx="144" cy="52" r="3.5" fill={GD}/>
+      <text x="88" y="18" textAnchor="middle" fontSize="7.5" fill={GD} fontFamily="Georgia,serif">head</text>
+      <text x="100" y="112" textAnchor="middle" fontSize="8.5" fill={RD} fontFamily="Georgia,serif">breaks the neckline, uptrend over</text>
+    </svg>
+  );
+}
+function Svg_invheadshoulders(){
+  return (
+    <svg viewBox="0 0 200 120" style={{width:"100%",maxWidth:180,height:"auto"}}>
+      <polyline points="12,26 40,64 60,44 88,90 116,44 144,62 176,20" fill="none" stroke={DK} strokeWidth="2.4" strokeLinejoin="round"/>
+      <line x1="8" y1="42" x2="192" y2="42" stroke={GR} strokeWidth="1.6" strokeDasharray="4,3"/>
+      <text x="10" y="36" fontSize="7.5" fill={GR} fontFamily="Georgia,serif">neckline</text>
+      <circle cx="40" cy="64" r="3.5" fill={GD}/><circle cx="88" cy="90" r="4.5" fill={GD}/><circle cx="144" cy="62" r="3.5" fill={GD}/>
+      <text x="88" y="102" textAnchor="middle" fontSize="7.5" fill={GD} fontFamily="Georgia,serif">head</text>
+      <text x="100" y="116" textAnchor="middle" fontSize="8.5" fill={GR} fontFamily="Georgia,serif">breaks above, downtrend over</text>
+    </svg>
+  );
+}
+function Svg_doubletop(){
+  return (
+    <svg viewBox="0 0 200 120" style={{width:"100%",maxWidth:180,height:"auto"}}>
+      <line x1="8" y1="28" x2="192" y2="28" stroke={RD} strokeWidth="1.6" strokeDasharray="4,3"/>
+      <text x="10" y="22" fontSize="7.5" fill={RD} fontFamily="Georgia,serif">resistance</text>
+      <polyline points="14,88 48,30 84,68 120,30 156,80 186,100" fill="none" stroke={DK} strokeWidth="2.4" strokeLinejoin="round"/>
+      <circle cx="48" cy="30" r="4" fill={GD}/><circle cx="120" cy="30" r="4" fill={GD}/>
+      <line x1="8" y1="68" x2="192" y2="68" stroke={LBL} strokeWidth="1" strokeDasharray="3,2"/>
+      <text x="152" y="64" fontSize="7" fill={LBL} fontFamily="Georgia,serif">trigger</text>
+      <text x="100" y="116" textAnchor="middle" fontSize="8.5" fill={RD} fontFamily="Georgia,serif">rejected twice, an M shape</text>
+    </svg>
+  );
+}
+function Svg_doublebottom(){
+  return (
+    <svg viewBox="0 0 200 120" style={{width:"100%",maxWidth:180,height:"auto"}}>
+      <line x1="8" y1="88" x2="192" y2="88" stroke={GR} strokeWidth="1.6" strokeDasharray="4,3"/>
+      <text x="10" y="100" fontSize="7.5" fill={GR} fontFamily="Georgia,serif">support</text>
+      <polyline points="14,26 48,86 84,48 120,86 156,34 186,14" fill="none" stroke={DK} strokeWidth="2.4" strokeLinejoin="round"/>
+      <circle cx="48" cy="86" r="4" fill={GD}/><circle cx="120" cy="86" r="4" fill={GD}/>
+      <line x1="8" y1="48" x2="192" y2="48" stroke={LBL} strokeWidth="1" strokeDasharray="3,2"/>
+      <text x="152" y="44" fontSize="7" fill={LBL} fontFamily="Georgia,serif">trigger</text>
+      <text x="100" y="116" textAnchor="middle" fontSize="8.5" fill={GR} fontFamily="Georgia,serif">held twice, a W shape</text>
+    </svg>
+  );
+}
+function Svg_risingwedge(){
+  return (
+    <svg viewBox="0 0 200 120" style={{width:"100%",maxWidth:180,height:"auto"}}>
+      <line x1="16" y1="64" x2="150" y2="20" stroke={GD} strokeWidth="2"/>
+      <line x1="16" y1="98" x2="150" y2="34" stroke={GD} strokeWidth="2"/>
+      <polyline points="18,92 44,44 62,72 92,32 110,56 138,26 150,34 168,72 188,96" fill="none" stroke={DK} strokeWidth="2" strokeLinejoin="round"/>
+      <text x="82" y="14" textAnchor="middle" fontSize="8" fill={GD} fontFamily="Georgia,serif">both rise, range narrows</text>
+      <text x="100" y="114" textAnchor="middle" fontSize="8.5" fill={RD} fontFamily="Georgia,serif">usually breaks down</text>
+    </svg>
+  );
+}
+function Svg_fallingwedge(){
+  return (
+    <svg viewBox="0 0 200 120" style={{width:"100%",maxWidth:180,height:"auto"}}>
+      <line x1="16" y1="22" x2="150" y2="76" stroke={GD} strokeWidth="2"/>
+      <line x1="16" y1="56" x2="150" y2="90" stroke={GD} strokeWidth="2"/>
+      <polyline points="18,28 44,66 62,38 92,80 110,56 138,88 150,76 168,42 188,18" fill="none" stroke={DK} strokeWidth="2" strokeLinejoin="round"/>
+      <text x="82" y="110" textAnchor="middle" fontSize="8" fill={GD} fontFamily="Georgia,serif">both fall, range narrows</text>
+      <text x="100" y="14" textAnchor="middle" fontSize="8.5" fill={GR} fontFamily="Georgia,serif">usually breaks up</text>
+    </svg>
+  );
+}
+function Svg_cuphandle(){
+  return (
+    <svg viewBox="0 0 200 120" style={{width:"100%",maxWidth:180,height:"auto"}}>
+      <line x1="8" y1="34" x2="192" y2="34" stroke={GD} strokeWidth="1.3" strokeDasharray="4,3"/>
+      <text x="10" y="28" fontSize="7.5" fill={GD} fontFamily="Georgia,serif">rim</text>
+      <path d="M22 34 Q 80 118 138 34" fill="none" stroke={DK} strokeWidth="2.4"/>
+      <polyline points="138,34 152,44 164,50 176,34 188,14" fill="none" stroke={DK} strokeWidth="2.4" strokeLinejoin="round"/>
+      <text x="80" y="86" textAnchor="middle" fontSize="8" fill={LBL} fontFamily="Georgia,serif">cup</text>
+      <text x="160" y="66" textAnchor="middle" fontSize="7.5" fill={LBL} fontFamily="Georgia,serif">handle</text>
+      <text x="100" y="112" textAnchor="middle" fontSize="8.5" fill={GR} fontFamily="Georgia,serif">rounded base, shallow pause, then up</text>
+    </svg>
+  );
+}
+function Svg_asctriangle(){
+  return (
+    <svg viewBox="0 0 200 120" style={{width:"100%",maxWidth:180,height:"auto"}}>
+      <line x1="14" y1="32" x2="160" y2="32" stroke={RD} strokeWidth="1.8"/>
+      <text x="16" y="26" fontSize="7.5" fill={RD} fontFamily="Georgia,serif">flat resistance</text>
+      <line x1="18" y1="92" x2="160" y2="38" stroke={GD} strokeWidth="1.8"/>
+      <polyline points="18,92 44,34 66,74 92,34 114,60 140,34 160,44 176,16 190,8" fill="none" stroke={DK} strokeWidth="2" strokeLinejoin="round"/>
+      <text x="100" y="112" textAnchor="middle" fontSize="8.5" fill={GR} fontFamily="Georgia,serif">higher lows pressing a flat ceiling</text>
+    </svg>
+  );
+}
+function Svg_desctriangle(){
+  return (
+    <svg viewBox="0 0 200 120" style={{width:"100%",maxWidth:180,height:"auto"}}>
+      <line x1="14" y1="82" x2="160" y2="82" stroke={GR} strokeWidth="1.8"/>
+      <text x="16" y="94" fontSize="7.5" fill={GR} fontFamily="Georgia,serif">flat support</text>
+      <line x1="18" y1="20" x2="160" y2="74" stroke={GD} strokeWidth="1.8"/>
+      <polyline points="18,20 44,80 66,38 92,80 114,52 140,80 160,74 176,100 190,110" fill="none" stroke={DK} strokeWidth="2" strokeLinejoin="round"/>
+      <text x="100" y="14" textAnchor="middle" fontSize="8.5" fill={RD} fontFamily="Georgia,serif">lower highs pressing a flat floor</text>
+    </svg>
+  );
+}
+function Svg_bullflag(){
+  return (
+    <svg viewBox="0 0 200 120" style={{width:"100%",maxWidth:180,height:"auto"}}>
+      <line x1="16" y1="100" x2="72" y2="22" stroke={GD} strokeWidth="2.4"/>
+      <text x="20" y="66" fontSize="7.5" fill={GD} fontFamily="Georgia,serif" transform="rotate(-56,20,66)">pole</text>
+      <line x1="78" y1="20" x2="140" y2="42" stroke={GD} strokeWidth="1.6"/>
+      <line x1="78" y1="40" x2="140" y2="60" stroke={GD} strokeWidth="1.6"/>
+      <polyline points="16,100 44,60 72,22 88,34 104,42 120,38 136,50 152,24 176,8" fill="none" stroke={DK} strokeWidth="2" strokeLinejoin="round"/>
+      <text x="108" y="74" textAnchor="middle" fontSize="7.5" fill={GD} fontFamily="Georgia,serif">flag</text>
+      <text x="100" y="112" textAnchor="middle" fontSize="8.5" fill={GR} fontFamily="Georgia,serif">sharp move, brief pause, continues up</text>
+    </svg>
+  );
+}
+function Svg_bearflag(){
+  return (
+    <svg viewBox="0 0 200 120" style={{width:"100%",maxWidth:180,height:"auto"}}>
+      <line x1="16" y1="16" x2="72" y2="90" stroke={GD} strokeWidth="2.4"/>
+      <text x="30" y="54" fontSize="7.5" fill={GD} fontFamily="Georgia,serif" transform="rotate(56,30,54)">pole</text>
+      <line x1="78" y1="88" x2="140" y2="66" stroke={GD} strokeWidth="1.6"/>
+      <line x1="78" y1="106" x2="140" y2="84" stroke={GD} strokeWidth="1.6"/>
+      <polyline points="16,16 44,54 72,90 88,80 104,74 120,80 136,70 152,94 176,110" fill="none" stroke={DK} strokeWidth="2" strokeLinejoin="round"/>
+      <text x="108" y="52" textAnchor="middle" fontSize="7.5" fill={GD} fontFamily="Georgia,serif">flag</text>
+      <text x="100" y="14" textAnchor="middle" fontSize="8.5" fill={RD} fontFamily="Georgia,serif">sharp drop, brief pause, continues down</text>
+    </svg>
+  );
+}
+function Svg_neckline(){
+  return (
+    <svg viewBox="0 0 200 120" style={{width:"100%",maxWidth:180,height:"auto"}}>
+      <polyline points="12,86 40,52 60,72 88,30 116,72 144,54 176,94" fill="none" stroke={BD} strokeWidth="2" strokeLinejoin="round"/>
+      <line x1="8" y1="72" x2="192" y2="72" stroke={OR} strokeWidth="2.6"/>
+      <circle cx="60" cy="72" r="4" fill={OR}/><circle cx="116" cy="72" r="4" fill={OR}/>
+      <text x="100" y="66" textAnchor="middle" fontSize="8.5" fill={OR} fontFamily="Georgia,serif">the trigger line</text>
+      <text x="100" y="112" textAnchor="middle" fontSize="8.5" fill={LBL} fontFamily="Georgia,serif">nothing counts until price closes through it</text>
+    </svg>
+  );
+}
+function Svg_reversalpattern(){
+  return (
+    <svg viewBox="0 0 200 120" style={{width:"100%",maxWidth:180,height:"auto"}}>
+      <polyline points="14,94 44,74 74,50 100,32" fill="none" stroke={GR} strokeWidth="2.4" strokeLinejoin="round"/>
+      <polyline points="100,32 126,50 156,74 186,94" fill="none" stroke={RD} strokeWidth="2.4" strokeLinejoin="round"/>
+      <circle cx="100" cy="32" r="6" fill="none" stroke={GD} strokeWidth="2"/>
+      <text x="100" y="20" textAnchor="middle" fontSize="8.5" fill={GD} fontFamily="Georgia,serif">the turn</text>
+      <text x="100" y="112" textAnchor="middle" fontSize="8.5" fill={LBL} fontFamily="Georgia,serif">the trend ends and changes direction</text>
+    </svg>
+  );
+}
+function Svg_continuationpattern(){
+  return (
+    <svg viewBox="0 0 200 120" style={{width:"100%",maxWidth:180,height:"auto"}}>
+      <polyline points="14,94 46,58" fill="none" stroke={GR} strokeWidth="2.4"/>
+      <polyline points="46,58 68,66 90,58 112,66" fill="none" stroke={GD} strokeWidth="2.4" strokeLinejoin="round"/>
+      <polyline points="112,66 148,36 186,14" fill="none" stroke={GR} strokeWidth="2.4" strokeLinejoin="round"/>
+      <rect x="42" y="48" width="74" height="28" fill="none" stroke={GD} strokeWidth="1" strokeDasharray="3,2" rx="3"/>
+      <text x="79" y="94" textAnchor="middle" fontSize="8" fill={GD} fontFamily="Georgia,serif">the pause</text>
+      <text x="100" y="112" textAnchor="middle" fontSize="8.5" fill={GR} fontFamily="Georgia,serif">the trend rests, then carries on</text>
+    </svg>
+  );
+}
+function Svg_divergence(){
+  return (
+    <svg viewBox="0 0 200 120" style={{width:"100%",maxWidth:180,height:"auto"}}>
+      <polyline points="16,64 44,38 72,52 100,22 128,40 156,12" fill="none" stroke={DK} strokeWidth="2.2" strokeLinejoin="round"/>
+      <line x1="100" y1="22" x2="156" y2="12" stroke={GR} strokeWidth="1.4" strokeDasharray="3,2"/>
+      <text x="162" y="16" fontSize="7.5" fill={GR} fontFamily="Georgia,serif">higher</text>
+      <line x1="8" y1="70" x2="192" y2="70" stroke={BD} strokeWidth="1"/>
+      <polyline points="16,104 44,86 72,96 100,84 128,94 156,92" fill="none" stroke={PU} strokeWidth="2.2" strokeLinejoin="round"/>
+      <line x1="100" y1="84" x2="156" y2="92" stroke={RD} strokeWidth="1.4" strokeDasharray="3,2"/>
+      <text x="162" y="96" fontSize="7.5" fill={RD} fontFamily="Georgia,serif">lower</text>
+      <text x="10" y="82" fontSize="7.5" fill={LBL} fontFamily="Georgia,serif">RSI</text>
+      <text x="10" y="16" fontSize="7.5" fill={LBL} fontFamily="Georgia,serif">price</text>
+    </svg>
+  );
+}
+function Svg_buysellvolume(){
+  return (
+    <svg viewBox="0 0 200 120" style={{width:"100%",maxWidth:180,height:"auto"}}>
+      <line x1="12" y1="98" x2="192" y2="98" stroke={BD} strokeWidth="1"/>
+      {[[18,16,6],[46,8,14],[74,20,7],[102,26,25],[130,7,16],[158,18,6]].map(function(b,i){
+        return <g key={i}>
+          <rect x={b[0]} y={98-b[1]} width="20" height={b[1]} fill={GR} opacity="0.8" rx="1"/>
+          <rect x={b[0]} y={98-b[1]-b[2]} width="20" height={b[2]} fill={RD} opacity="0.8" rx="1"/>
+        </g>;
+      })}
+      <circle cx="112" cy="42" r="7" fill="none" stroke={GD} strokeWidth="1.6"/>
+      <text x="112" y="30" textAnchor="middle" fontSize="7.5" fill={GD} fontFamily="Georgia,serif">nearly even</text>
+      <text x="14" y="114" fontSize="7.5" fill={GR} fontFamily="Georgia,serif">■ buy</text>
+      <text x="52" y="114" fontSize="7.5" fill={RD} fontFamily="Georgia,serif">■ sell</text>
+      <text x="192" y="114" textAnchor="end" fontSize="7.5" fill={LBL} fontFamily="Georgia,serif">who was more aggressive</text>
+    </svg>
+  );
+}
+function Svg_crossover(){
+  return (
+    <svg viewBox="0 0 200 120" style={{width:"100%",maxWidth:180,height:"auto"}}>
+      <line x1="12" y1="62" x2="192" y2="62" stroke={BD} strokeWidth="1" strokeDasharray="3,3"/>
+      <polyline points="16,86 60,76 100,60 140,38 186,20" fill="none" stroke={BL} strokeWidth="2.4"/>
+      <polyline points="16,74 60,70 100,64 140,54 186,44" fill="none" stroke={OR} strokeWidth="2.2" strokeDasharray="5,3"/>
+      <circle cx="104" cy="62" r="6" fill="none" stroke={GR} strokeWidth="2"/>
+      <text x="104" y="102" textAnchor="middle" fontSize="8.5" fill={GR} fontFamily="Georgia,serif">the fast line crosses the slow one</text>
+      <text x="190" y="16" textAnchor="end" fontSize="7.5" fill={BL} fontFamily="Georgia,serif">fast</text>
+      <text x="190" y="54" textAnchor="end" fontSize="7.5" fill={OR} fontFamily="Georgia,serif">signal</text>
+    </svg>
+  );
+}
+function Svg_histogram(){
+  return (
+    <svg viewBox="0 0 200 120" style={{width:"100%",maxWidth:180,height:"auto"}}>
+      <line x1="12" y1="60" x2="192" y2="60" stroke={LBL} strokeWidth="1.2"/>
+      <text x="14" y="56" fontSize="7" fill={LBL} fontFamily="Georgia,serif">zero</text>
+      {[-8,-16,-12,-4,6,14,20,16,9,4].map(function(v,i){
+        var hh=Math.abs(v)*2;
+        return <rect key={i} x={18+i*17} y={v<0?60:60-hh} width="12" height={hh} fill={v<0?RD:GR} opacity="0.82" rx="1"/>;
+      })}
+      <text x="52" y="112" textAnchor="middle" fontSize="7.5" fill={RD} fontFamily="Georgia,serif">below zero</text>
+      <text x="150" y="112" textAnchor="middle" fontSize="7.5" fill={GR} fontFamily="Georgia,serif">above zero</text>
+      <text x="100" y="16" textAnchor="middle" fontSize="8" fill={LBL} fontFamily="Georgia,serif">bars show momentum expanding or fading</text>
+    </svg>
+  );
+}
+function Svg_dynamicsr(){
+  return (
+    <svg viewBox="0 0 200 120" style={{width:"100%",maxWidth:180,height:"auto"}}>
+      <path d="M14 96 Q 70 84 110 66 Q 152 48 188 30" fill="none" stroke={GD} strokeWidth="2.4"/>
+      <polyline points="14,84 42,66 62,82 90,58 112,74 140,44 162,60 188,22" fill="none" stroke={DK} strokeWidth="2" strokeLinejoin="round"/>
+      <circle cx="62" cy="82" r="4.5" fill="none" stroke={GR} strokeWidth="1.8"/>
+      <circle cx="112" cy="74" r="4.5" fill="none" stroke={GR} strokeWidth="1.8"/>
+      <circle cx="162" cy="60" r="4.5" fill="none" stroke={GR} strokeWidth="1.8"/>
+      <text x="100" y="16" textAnchor="middle" fontSize="8" fill={GD} fontFamily="Georgia,serif">the level moves with price</text>
+      <text x="100" y="114" textAnchor="middle" fontSize="8.5" fill={GR} fontFamily="Georgia,serif">price keeps bouncing off the average</text>
+    </svg>
+  );
+}
+function Svg_lagging(){
+  return (
+    <svg viewBox="0 0 200 120" style={{width:"100%",maxWidth:180,height:"auto"}}>
+      <polyline points="14,88 44,84 74,54 104,30 134,26 186,20" fill="none" stroke={DK} strokeWidth="2.4"/>
+      <text x="60" y="46" fontSize="7.5" fill={DK} fontFamily="Georgia,serif">price</text>
+      <polyline points="14,102 44,100 74,94 104,72 134,54 186,40" fill="none" stroke={PU} strokeWidth="2.4"/>
+      <text x="120" y="94" fontSize="7.5" fill={PU} fontFamily="Georgia,serif">indicator</text>
+      <line x1="104" y1="30" x2="104" y2="72" stroke={LBL} strokeWidth="1" strokeDasharray="3,2"/>
+      <text x="100" y="16" textAnchor="middle" fontSize="8" fill={LBL} fontFamily="Georgia,serif">it follows, it does not lead</text>
+      <text x="100" y="116" textAnchor="middle" fontSize="8" fill={LBL} fontFamily="Georgia,serif">built from price that already happened</text>
+    </svg>
+  );
+}
+function Svg_fibonacci(){
+  return (
+    <svg viewBox="0 0 200 120" style={{width:"100%",maxWidth:180,height:"auto"}}>
+      {[[34,"38.2%"],[54,"50%"],[74,"61.8%"]].map(function(r,i){
+        return <g key={i}>
+          <line x1="14" y1={r[0]} x2="150" y2={r[0]} stroke={GD} strokeWidth={i===2?"1.8":"1.2"}/>
+          <text x="154" y={r[0]+3} fontSize="7.5" fill={GD} fontFamily="Georgia,serif">{r[1]}</text>
+        </g>;
+      })}
+      <polyline points="14,100 40,72 64,44 88,14 112,42 136,66 152,76 176,44" fill="none" stroke={DK} strokeWidth="2.2" strokeLinejoin="round"/>
+      <circle cx="152" cy="76" r="4.5" fill="none" stroke={GR} strokeWidth="1.8"/>
+      <text x="16" y="112" fontSize="7.5" fill={LBL} fontFamily="Georgia,serif">swing low → high → pullback</text>
+    </svg>
+  );
+}
+function Svg_theflip(){
+  return (
+    <svg viewBox="0 0 200 120" style={{width:"100%",maxWidth:180,height:"auto"}}>
+      <line x1="8" y1="58" x2="192" y2="58" stroke={OR} strokeWidth="2.4"/>
+      <polyline points="14,96 38,60 58,84 82,60 104,88 128,44 150,62 172,34 188,22" fill="none" stroke={DK} strokeWidth="2.2" strokeLinejoin="round"/>
+      <circle cx="38" cy="60" r="4" fill="none" stroke={RD} strokeWidth="1.8"/>
+      <circle cx="82" cy="60" r="4" fill="none" stroke={RD} strokeWidth="1.8"/>
+      <circle cx="150" cy="62" r="5" fill="none" stroke={GR} strokeWidth="2"/>
+      <text x="46" y="30" fontSize="7.5" fill={RD} fontFamily="Georgia,serif">was resistance</text>
+      <text x="188" y="80" textAnchor="end" fontSize="7.5" fill={GR} fontFamily="Georgia,serif">now support</text>
+      <text x="100" y="114" textAnchor="middle" fontSize="8" fill={LBL} fontFamily="Georgia,serif">same level, opposite role</text>
+    </svg>
+  );
+}
+function Svg_keylevel(){
+  return (
+    <svg viewBox="0 0 200 120" style={{width:"100%",maxWidth:180,height:"auto"}}>
+      <rect x="8" y="56" width="184" height="16" fill={GR} opacity="0.2"/>
+      <line x1="8" y1="56" x2="192" y2="56" stroke={GR} strokeWidth="1" strokeDasharray="3,2"/>
+      <line x1="8" y1="72" x2="192" y2="72" stroke={GR} strokeWidth="1" strokeDasharray="3,2"/>
+      <polyline points="14,32 40,60 62,38 88,70 112,40 138,64 164,36 188,20" fill="none" stroke={DK} strokeWidth="2.2" strokeLinejoin="round"/>
+      <circle cx="40" cy="60" r="3.5" fill={GR}/><circle cx="88" cy="70" r="3.5" fill={GR}/><circle cx="138" cy="64" r="3.5" fill={GR}/>
+      <text x="100" y="96" textAnchor="middle" fontSize="8.5" fill={GR} fontFamily="Georgia,serif">a zone, not an exact price</text>
+      <text x="100" y="112" textAnchor="middle" fontSize="8" fill={LBL} fontFamily="Georgia,serif">more touches means more weight</text>
+    </svg>
+  );
+}
+function Svg_spinningtop(){
+  return (
+    <svg viewBox="0 0 200 120" style={{width:"100%",maxWidth:180,height:"auto"}}>
+      <line x1="100" y1="16" x2="100" y2="46" stroke={PU} strokeWidth="2.5"/>
+      <rect x="82" y="46" width="36" height="20" fill="#f0ebfa" stroke={PU} strokeWidth="2.2" rx="2"/>
+      <line x1="100" y1="66" x2="100" y2="96" stroke={PU} strokeWidth="2.5"/>
+      <line x1="122" y1="31" x2="156" y2="31" stroke={BD} strokeWidth="1" strokeDasharray="3,2"/>
+      <line x1="122" y1="81" x2="156" y2="81" stroke={BD} strokeWidth="1" strokeDasharray="3,2"/>
+      <text x="160" y="34" fontSize="7.5" fill={LBL} fontFamily="Georgia,serif">even</text>
+      <text x="160" y="84" fontSize="7.5" fill={LBL} fontFamily="Georgia,serif">wicks</text>
+      <text x="100" y="112" textAnchor="middle" fontSize="8.5" fill={PU} fontFamily="Georgia,serif">both sides pushed, neither won</text>
+    </svg>
+  );
+}
+function Svg_marubozu(){
+  return (
+    <svg viewBox="0 0 200 120" style={{width:"100%",maxWidth:180,height:"auto"}}>
+      <rect x="52" y="16" width="30" height="82" fill="#e8faf3" stroke={GR} strokeWidth="2.4" rx="2"/>
+      <text x="67" y="112" textAnchor="middle" fontSize="7.5" fill={GR} fontFamily="Georgia,serif">bullish</text>
+      <rect x="118" y="16" width="30" height="82" fill="#fff0ee" stroke={RD} strokeWidth="2.4" rx="2"/>
+      <text x="133" y="112" textAnchor="middle" fontSize="7.5" fill={RD} fontFamily="Georgia,serif">bearish</text>
+      <text x="100" y="12" textAnchor="middle" fontSize="8" fill={LBL} fontFamily="Georgia,serif">no wicks at all</text>
+    </svg>
+  );
+}
+function Svg_linechart(){
+  return (
+    <svg viewBox="0 0 200 120" style={{width:"100%",maxWidth:180,height:"auto"}}>
+      <polyline points="16,84 48,60 80,72 112,38 144,50 182,20" fill="none" stroke={BL} strokeWidth="2.6" strokeLinejoin="round"/>
+      {[[16,84],[48,60],[80,72],[112,38],[144,50],[182,20]].map(function(p,i){
+        return <circle key={i} cx={p[0]} cy={p[1]} r="3" fill={BL}/>;
+      })}
+      <text x="100" y="106" textAnchor="middle" fontSize="8.5" fill={LBL} fontFamily="Georgia,serif">closing prices only, joined up</text>
+      <text x="100" y="18" textAnchor="middle" fontSize="8" fill={LBL} fontFamily="Georgia,serif">no open, high, or low</text>
+    </svg>
+  );
+}
+function Svg_barchart(){
+  return (
+    <svg viewBox="0 0 200 120" style={{width:"100%",maxWidth:180,height:"auto"}}>
+      {[[40,22,84,GR],[100,34,94,RD],[160,14,74,GR]].map(function(b,i){
+        return <g key={i}>
+          <line x1={b[0]} y1={b[1]} x2={b[0]} y2={b[2]} stroke={b[3]} strokeWidth="2.6"/>
+          <line x1={b[0]-12} y1={b[1]+18} x2={b[0]} y2={b[1]+18} stroke={b[3]} strokeWidth="2.6"/>
+          <line x1={b[0]} y1={b[2]-18} x2={b[0]+12} y2={b[2]-18} stroke={b[3]} strokeWidth="2.6"/>
+        </g>;
+      })}
+      <text x="20" y="52" fontSize="7" fill={LBL} fontFamily="Georgia,serif">open</text>
+      <text x="176" y="62" fontSize="7" fill={LBL} fontFamily="Georgia,serif">close</text>
+      <text x="100" y="112" textAnchor="middle" fontSize="8.5" fill={LBL} fontFamily="Georgia,serif">the same four prices, ticks instead of a body</text>
+    </svg>
+  );
+}
+function Svg_candleclose(){
+  return (
+    <svg viewBox="0 0 200 120" style={{width:"100%",maxWidth:180,height:"auto"}}>
+      <line x1="56" y1="20" x2="56" y2="42" stroke={GD} strokeWidth="2.2" strokeDasharray="3,2"/>
+      <rect x="42" y="42" width="28" height="34" fill="none" stroke={GD} strokeWidth="2.2" strokeDasharray="3,2" rx="2"/>
+      <line x1="56" y1="76" x2="56" y2="96" stroke={GD} strokeWidth="2.2" strokeDasharray="3,2"/>
+      <text x="56" y="112" textAnchor="middle" fontSize="7.5" fill={GD} fontFamily="Georgia,serif">still forming</text>
+      <text x="56" y="14" textAnchor="middle" fontSize="7.5" fill={GD} fontFamily="Georgia,serif">can still flip</text>
+      <line x1="144" y1="20" x2="144" y2="38" stroke={GR} strokeWidth="2.5"/>
+      <rect x="130" y="38" width="28" height="42" fill="#e8faf3" stroke={GR} strokeWidth="2.4" rx="2"/>
+      <line x1="144" y1="80" x2="144" y2="96" stroke={GR} strokeWidth="2.5"/>
+      <text x="144" y="112" textAnchor="middle" fontSize="7.5" fill={GR} fontFamily="Georgia,serif">closed, final</text>
+      <text x="144" y="14" textAnchor="middle" fontSize="7.5" fill={GR} fontFamily="Georgia,serif">now it counts</text>
+    </svg>
+  );
+}
+function Svg_bullbearcandle(){
+  return (
+    <svg viewBox="0 0 200 120" style={{width:"100%",maxWidth:180,height:"auto"}}>
+      <line x1="60" y1="16" x2="60" y2="34" stroke={GR} strokeWidth="2.5"/>
+      <rect x="46" y="34" width="28" height="46" fill="#e8faf3" stroke={GR} strokeWidth="2.4" rx="2"/>
+      <line x1="60" y1="80" x2="60" y2="98" stroke={GR} strokeWidth="2.5"/>
+      <text x="60" y="112" textAnchor="middle" fontSize="8" fill={GR} fontFamily="Georgia,serif">closed above open</text>
+      <line x1="140" y1="16" x2="140" y2="34" stroke={RD} strokeWidth="2.5"/>
+      <rect x="126" y="34" width="28" height="46" fill="#fff0ee" stroke={RD} strokeWidth="2.4" rx="2"/>
+      <line x1="140" y1="80" x2="140" y2="98" stroke={RD} strokeWidth="2.5"/>
+      <text x="140" y="112" textAnchor="middle" fontSize="8" fill={RD} fontFamily="Georgia,serif">closed below open</text>
+      <text x="100" y="60" textAnchor="middle" fontSize="9" fill={LBL} fontFamily="Georgia,serif">vs</text>
+    </svg>
+  );
+}
+function Svg_confluence(){
+  return (
+    <svg viewBox="0 0 200 120" style={{width:"100%",maxWidth:180,height:"auto"}}>
+      <line x1="10" y1="66" x2="190" y2="66" stroke={GR} strokeWidth="1.6"/>
+      <text x="12" y="60" fontSize="7" fill={GR} fontFamily="Georgia,serif">support</text>
+      <line x1="10" y1="70" x2="190" y2="70" stroke={GD} strokeWidth="1.6"/>
+      <text x="188" y="62" textAnchor="end" fontSize="7" fill={GD} fontFamily="Georgia,serif">fib 61.8%</text>
+      <path d="M10 82 Q 90 76 190 62" fill="none" stroke={BL} strokeWidth="1.6"/>
+      <text x="14" y="92" fontSize="7" fill={BL} fontFamily="Georgia,serif">50 MA</text>
+      <rect x="86" y="56" width="34" height="24" fill={OR} opacity="0.18" stroke={OR} strokeWidth="1.4" rx="3"/>
+      <polyline points="14,26 44,44 72,58 102,72 132,52 164,30 188,16" fill="none" stroke={DK} strokeWidth="2.2" strokeLinejoin="round"/>
+      <text x="100" y="112" textAnchor="middle" fontSize="8.5" fill={OR} fontFamily="Georgia,serif">several tools agreeing on one zone</text>
+    </svg>
+  );
+}
+function Svg_timeframealign(){
+  return (
+    <svg viewBox="0 0 200 120" style={{width:"100%",maxWidth:180,height:"auto"}}>
+      <text x="12" y="16" fontSize="7.5" fill={LBL} fontFamily="Georgia,serif">1 hour</text>
+      <line x1="10" y1="44" x2="190" y2="44" stroke={GR} strokeWidth="1.3" strokeDasharray="3,2"/>
+      <polyline points="14,34 54,42 94,24 134,30 180,12" fill="none" stroke={GR} strokeWidth="2.4" strokeLinejoin="round"/>
+      <line x1="10" y1="58" x2="190" y2="58" stroke={BD} strokeWidth="1"/>
+      <text x="12" y="72" fontSize="7.5" fill={LBL} fontFamily="Georgia,serif">15 min</text>
+      <polyline points="14,98 54,92 94,86 134,80 180,70" fill="none" stroke={GR} strokeWidth="2.4" strokeLinejoin="round"/>
+      <text x="188" y="34" textAnchor="end" fontSize="7.5" fill={GR} fontFamily="Georgia,serif">✓ up</text>
+      <text x="188" y="94" textAnchor="end" fontSize="7.5" fill={GR} fontFamily="Georgia,serif">✓ up</text>
+      <text x="100" y="114" textAnchor="middle" fontSize="8.5" fill={GR} fontFamily="Georgia,serif">both timeframes telling the same story</text>
+    </svg>
+  );
+}
+const SVG_MAP = { candle:SvgCandle, wick:SvgWick, support:SvgSupport, resistance:SvgResistance, trendline:SvgTrendline, ma:SvgMA, body:SvgBody, gap:SvgGap, consolidation:SvgConsolidation, pullback:SvgPullback, breakout:SvgBreakout, uptrend:SvgUptrend, downtrend:SvgDowntrend, ohlc:SvgOHLC, reversal:SvgReversal, longpos:SvgLongPosition, shortpos:SvgShortPosition, ranging:SvgRanging, breakdown:SvgBreakdown, doji:SvgDoji, hammer:SvgHammer, shootingstar:SvgShootingStar, engulfing:SvgEngulfing, volumebars:Svg_volumebars, relvolume:Svg_relvolume, rsi:Svg_rsi, overbought:Svg_overbought, macd:Svg_macd, sma:Svg_sma, ema:Svg_ema, goldencross:Svg_goldencross, deathcross:Svg_deathcross, vwap:Svg_vwap, psychlevel:Svg_psychlevel, falsebreakout:Svg_falsebreakout, swinghl:Svg_swinghl, timeframe:Svg_timeframe, chartpattern:Svg_chartpattern, delta:Svg_delta, gamma:Svg_gamma, decay:Svg_decay, vega:Svg_vega, iv:Svg_iv, ivrank:Svg_ivrank, ivpercentile:Svg_ivpercentile, deltaneutral:Svg_deltaneutral, volcrush:Svg_volcrush, chainbid:Svg_chainbid, chainask:Svg_chainask, chainstrike:Svg_chainstrike, chainoi:Svg_chainoi, chainvol:Svg_chainvol, chainlayout:Svg_chainlayout, chainspread:Svg_chainspread, chainmark:Svg_chainmark, chainlast:Svg_chainlast, chainchange:Svg_chainchange, chainliquidity:Svg_chainliquidity, expcycle:Svg_expcycle, nearfar:Svg_nearfar, weeklymonthly:Svg_weeklymonthly, itm:Svg_itm, atm:Svg_atm, otm:Svg_otm, moneyness:Svg_moneyness, strikeprice:Svg_strikeprice, strikeintervals:Svg_strikeintervals, contract100:Svg_contract100, premium:Svg_premium, intrinsic:Svg_intrinsic, extrinsic:Svg_extrinsic, expiredate:Svg_expiredate, expiresworthless:Svg_expiresworthless, payoffcall:Svg_payoffcall, payoffput:Svg_payoffput, payoffbe:Svg_payoffbe, payoffcc:Svg_payoffcc, payoffcsp:Svg_payoffcsp, leverage:Svg_leverage, tradingcontract:Svg_tradingcontract, exercising:Svg_exercising, ordermarket:Svg_ordermarket, orderlimit:Svg_orderlimit, orderstoplimit:Svg_orderstoplimit, stoploss:Svg_stoploss, trailingstop:Svg_trailingstop, slippage:Svg_slippage, holdscalp:Svg_holdscalp, holdday:Svg_holdday, holdswing:Svg_holdswing, holdleap:Svg_holdleap, positionsize:Svg_positionsize, riskreward:Svg_riskreward, entrypoint:Svg_entrypoint, exitpoint:Svg_exitpoint, profittarget:Svg_profittarget, rangetrading:Svg_rangetrading, momentum:Svg_momentum, setupgraphic:Svg_setupgraphic, confirmation:Svg_confirmation, averagingdown:Svg_averagingdown, winrate:Svg_winrate, expectancy:Svg_expectancy, drawdown:Svg_drawdown, rmultiple:Svg_rmultiple, scalingout:Svg_scalingout, rollingup:Svg_rollingup, sectorrotation:Svg_sectorrotation, overnightexp:Svg_overnightexp, bullmarket:Svg_bullmarket, bearmarket:Svg_bearmarket, diversification:Svg_diversification, allocation:Svg_allocation, compounding:Svg_compounding, dca:Svg_dca, averagedown:Svg_averagedown, marketcap:Svg_marketcap, etf:Svg_etf, indexgraphic:Svg_indexgraphic, dividend:Svg_dividend, divyield:Svg_divyield, peratio:Svg_peratio, valuation:Svg_valuation, stocksplit:Svg_stocksplit, ipo:Svg_ipo, riskreturn:Svg_riskreturn, investorstraders:Svg_investorstraders, volatilitygen:Svg_volatilitygen, liquiditygen:Svg_liquiditygen, exchangegraphic:Svg_exchangegraphic, marketmaker:Svg_marketmaker, margin:Svg_margin, fractional:Svg_fractional, fundamental:Svg_fundamental, technicalanalysis:Svg_technicalanalysis, realizedunrealized:Svg_realizedunrealized, vixgraphic:Svg_vixgraphic, headshoulders:Svg_headshoulders, invheadshoulders:Svg_invheadshoulders, doubletop:Svg_doubletop, doublebottom:Svg_doublebottom, risingwedge:Svg_risingwedge, fallingwedge:Svg_fallingwedge, cuphandle:Svg_cuphandle, asctriangle:Svg_asctriangle, desctriangle:Svg_desctriangle, bullflag:Svg_bullflag, bearflag:Svg_bearflag, neckline:Svg_neckline, reversalpattern:Svg_reversalpattern, continuationpattern:Svg_continuationpattern, divergence:Svg_divergence, buysellvolume:Svg_buysellvolume, crossover:Svg_crossover, histogram:Svg_histogram, dynamicsr:Svg_dynamicsr, lagging:Svg_lagging, fibonacci:Svg_fibonacci, theflip:Svg_theflip, keylevel:Svg_keylevel, spinningtop:Svg_spinningtop, marubozu:Svg_marubozu, linechart:Svg_linechart, barchart:Svg_barchart, candleclose:Svg_candleclose, bullbearcandle:Svg_bullbearcandle, confluence:Svg_confluence, timeframealign:Svg_timeframealign };
 
 /* ============== HELPERS ============== */
 function shuffle(arr){
